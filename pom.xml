@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2010-2014 SOFTEC sa. All rights reserved.
+  ~
+  ~ This software is copyrighted. The software may not be copied,
+  ~ reproduced, translated, or reduced to any electronic medium
+  ~ or machine-readable form without the prior written consent of
+  ~ SOFTEC sa.
+  ~
+  ~ THIS PROGRAM IS CONFIDENTIAL AND PROPRIETARY TO SOFTEC S.A.
+  ~ AND MAY NOT BE REPRODUCED, PUBLISHED, OR DISCLOSED TO OTHERS
+  ~ WITHOUT COMPANY AUTHORIZATION.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.xwiki.commons</groupId>
+    <artifactId>xwiki-commons-pom</artifactId>
+    <version>6.3-SNAPSHOT</version>
+  </parent>
+  <groupId>org.xwiki.contrib.scriptingdocumentation</groupId>
+  <artifactId>scripting-documentation</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Scripting Documentation - Parent POM</name>
+  <description>Scripting Documentation - Parent POM</description>
+  <properties>
+    <rendering.version>${commons.version}</rendering.version>
+    <platform.version>${commons.version}</platform.version>
+  </properties>
+  <scm>
+    <connection>scm:git:git://github.com/xwiki-contrib/scripting-documentation.git</connection>
+    <developerConnection>scm:git:git@github.com:xwiki-contrib/scripting-documentation.git</developerConnection>
+    <url>https://github.com/xwiki-contrib/scripting-documentation</url>
+    <tag>HEAD</tag>
+  </scm>
+  <developers>
+    <developer>
+      <id>dgervalle</id>
+      <name>Denis Gervalle</name>
+    </developer>
+  </developers>
+  <build>
+    <!-- Needed to add support for the XAR packaging -->
+    <extensions>
+      <extension>
+        <groupId>org.xwiki.commons</groupId>
+        <artifactId>xwiki-commons-tool-xar-handlers</artifactId>
+        <version>${commons.version}</version>
+      </extension>
+    </extensions>
+    <plugins>
+      <!-- The XAR packaging uses the XAR plugin and thus we need to define what version to use -->
+      <plugin>
+        <groupId>org.xwiki.commons</groupId>
+        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
+        <version>${commons.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+  <distributionManagement>
+    <repository>
+      <id>xwiki-staging</id>
+      <name>XWiki Staging Repository</name>
+      <url>http://nexus.xwiki.org/nexus/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+  <modules>
+    <module>scripting-documentation-api</module>
+    <module>scripting-documentation-ui</module>
+  </modules>
+</project>

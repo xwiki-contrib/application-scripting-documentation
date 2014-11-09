@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2010-2014 SOFTEC sa. All rights reserved.
+  ~
+  ~ This software is copyrighted. The software may not be copied,
+  ~ reproduced, translated, or reduced to any electronic medium
+  ~ or machine-readable form without the prior written consent of
+  ~ SOFTEC sa.
+  ~
+  ~ THIS PROGRAM IS CONFIDENTIAL AND PROPRIETARY TO SOFTEC S.A.
+  ~ AND MAY NOT BE REPRODUCED, PUBLISHED, OR DISCLOSED TO OTHERS
+  ~ WITHOUT COMPANY AUTHORIZATION.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>scripting-documentation</artifactId>
+    <groupId>org.xwiki.contrib.scriptingdocumentation</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>scripting-documentation-ui</artifactId>
+  <name>Scripting Documentation - UI</name>
+  <packaging>xar</packaging>
+  <description>Provides documentation for scripting</description>
+  <properties>
+    <!-- Don't run CLIRR here since there's no Java code. -->
+    <xwiki.clirr.skip>true</xwiki.clirr.skip>
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>Scripting Documentation Application</xwiki.extension.name>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.contrib.scriptingdocumentation</groupId>
+      <artifactId>scripting-documentation-api</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

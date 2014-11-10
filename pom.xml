@@ -32,9 +32,9 @@
     <platform.version>${commons.version}</platform.version>
   </properties>
   <scm>
-    <connection>scm:git:git://github.com/xwiki-contrib/scripting-documentation.git</connection>
-    <developerConnection>scm:git:git@github.com:xwiki-contrib/scripting-documentation.git</developerConnection>
-    <url>https://github.com/xwiki-contrib/scripting-documentation</url>
+    <connection>scm:git:git://github.com/xwiki-contrib/application-scripting-documentation.git</connection>
+    <developerConnection>scm:git:git@github.com:xwiki-contrib/application-scripting-documentation.git</developerConnection>
+    <url>https://github.com/xwiki-contrib/application-scripting-documentation</url>
     <tag>HEAD</tag>
   </scm>
   <developers>

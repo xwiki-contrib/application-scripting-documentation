@@ -28,9 +28,14 @@ package org.xwiki.scripting.documentation;
 public class BindingKind
 {
     /**
-     * Bindings found in the velocity context (to be improved to separate the script context).
+     * Bindings found in the velocity context (excluding those in script context).
      */
     public static final BindingKind VELOCITY = new BindingKind("velocity");
+
+    /**
+     * Bindings found in the script context.
+     */
+    public static final BindingKind SCRIPT = new BindingKind("script");
 
     /**
      * Script services.

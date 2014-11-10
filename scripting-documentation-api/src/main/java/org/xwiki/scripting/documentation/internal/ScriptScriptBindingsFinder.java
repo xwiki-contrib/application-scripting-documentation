@@ -20,7 +20,6 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,51 +28,38 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.script.ScriptContext;
 
-import org.apache.velocity.VelocityContext;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.scripting.documentation.BindingKind;
-import org.xwiki.velocity.VelocityManager;
 
 /**
- * Search for bindings in the velocity context.
+ * Search for bindings in the script context.
  *
  * @version $Id$
  */
 @Component
-@Named("velocity")
+@Named("script")
 @Singleton
-public class VelocityScriptBindingsFinder extends AbstractScriptBindingsFinder
+public class ScriptScriptBindingsFinder extends AbstractScriptBindingsFinder
 {
     /**
-     * Used to get the Velocity Context from which we retrieve the list of bound variables.
-     */
-    @Inject
-    private VelocityManager velocityManager;
-
-    /**
-     * Used to get the Script Context from which we retrieve the list of bindings to exclude from velocity context.
+     * Used to get the Script Context from which we retrieve the list of bindings.
      */
     @Inject
     private ScriptContextManager scriptContextManager;
 
     /**
-     * @return the map of classes bindings in all velocity contexts
+     * @return the map of classes bindings in the engine scope of the script context.
      */
     protected Map<String, Class<?>> getBindings()
     {
-        VelocityContext vContext = this.velocityManager.getVelocityContext();
         ScriptContext scriptContext = this.scriptContextManager.getScriptContext();
-        Map<String, Object> scriptBindings = Collections.emptyMap();
-
-        if (scriptContext != null) {
-            scriptBindings = scriptContext.getBindings(ScriptContext.ENGINE_SCOPE);
-        }
 
         Map<String, Class<?>> bindings = new HashMap<String, Class<?>>();
-        while (vContext != null) {
-            addAllBinding(vContext, scriptBindings, bindings);
-            vContext = (VelocityContext) vContext.getChainedContext();
+        if (scriptContext != null) {
+            for (Map.Entry<String, Object> entry : scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).entrySet()) {
+                bindings.put(entry.getKey(), entry.getValue().getClass());
+            }
         }
 
         return bindings;
@@ -88,19 +74,7 @@ public class VelocityScriptBindingsFinder extends AbstractScriptBindingsFinder
     @Override
     protected BindingKind getType()
     {
-        return BindingKind.VELOCITY;
-    }
-
-    private static void addAllBinding(VelocityContext vcontext, Map<String, Object> scriptBindings,
-        Map<String, Class<?>> bindings)
-    {
-        for (Object key : vcontext.getKeys()) {
-            String name = key.toString();
-            Class<?> klass = vcontext.get(name).getClass();
-            Object scriptBinding = scriptBindings.get(name);
-            if (scriptBinding == null || !klass.equals(scriptBinding.getClass())) {
-                bindings.put(name, klass);
-            }
-        }
+        return BindingKind.SCRIPT;
     }
 }
+

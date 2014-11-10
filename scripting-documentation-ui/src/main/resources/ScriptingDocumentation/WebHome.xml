@@ -44,10 +44,10 @@ import org.xwiki.scripting.documentation.ScriptBindingsFinder;
 
 def getBindingDocLink(def binding) {
   def docLink = binding.docLink;
-  if (docLink) {
+  if (docLink &amp;&amp; !binding.isInternal()) {
     return "[[${binding.type.simpleName}&gt;&gt;$docLink]]";
   } else {
-    return $binding.type.simpleName
+    return binding.type.simpleName
   }
 }
 
@@ -68,8 +68,12 @@ def getLabel(def check, def word, def style) {
   }
 }
 
+xwiki.ssfx.use("js/xwiki/table/table.css");
+xwiki.jsfx.use("js/xwiki/table/tablefilterNsort.js", true);
+
 ScriptBindingsFinder bf = services.component.getComponentManager().getInstance(ScriptBindingsFinder.class);
-println '|= Binding Kind |= Binding Name |= Binding Class |=  |=  |=  |= Binding Module';
+println '(% class="grid sortable filterable" id="tableid" %)';
+println '(% class="sortHeader" %)|= Binding Kind |= Binding Name |= Binding Class |= Deprecated |= Legacy |= Internal |= Binding Module';
 bf.find().sort(){ it.fullName.toLowerCase() }.each() {
 println '|' + it.kind + '|' + it.fullName + '|' + getBindingDocLink(it)+ '|' + getLabel(it.isDeprecated(),"Deprecated","info") + '|' + getLabel(it.isLegacy(),"Legacy","warning") + '|' + getLabel(it.isInternal(),"Internal","danger") + '|' + getModuleDocLink(it.resource);
 }

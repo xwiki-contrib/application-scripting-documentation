@@ -12,5 +12,4 @@ couple of changes that are not easier to cope with.
 However, it has already a special handling for SNAPSHOT version (for which javadoc is not generated) to point to the
 latest release preceding that SNAPSHOT version.
 
-This is a work in progress, the actual API is quite complete, but the UI is very basic. Even if some caching are
-done, performance issues are still a concern and need improvement.
+This is a work in progress, the actual API is quite complete, but the UI is very basic.

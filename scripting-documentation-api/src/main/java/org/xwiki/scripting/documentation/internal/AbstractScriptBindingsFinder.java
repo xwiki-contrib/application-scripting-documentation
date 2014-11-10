@@ -57,15 +57,16 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     {
         List<Binding> bindings = new ArrayList<Binding>();
         for (Map.Entry<String, Class<?>> entry : getBindings().entrySet()) {
-            String key = entry.getKey();
+            String name = entry.getKey();
+            String fullName = getFullName(name);
             Class<?> klass = entry.getValue();
 
             BindingResource resource = resourceResolver.resolve(klass);
             if (resource != null && resource instanceof ExtensionBindingResource) {
-                Binding binding = bindingCache.get(key, resource);
+                Binding binding = bindingCache.get(fullName, resource);
                 if (binding == null) {
                     binding =
-                        bindingCache.add(new ExtensionBinding(klass, key, getFullName(key), getType(), null, resource));
+                        bindingCache.add(new ExtensionBinding(klass, name, fullName, getType(), null, resource));
                 }
                 bindings.add(binding);
             }

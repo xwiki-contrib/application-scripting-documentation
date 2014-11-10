@@ -83,12 +83,12 @@ public class DefaultBindingCache implements BindingCache, Initializable
     }
 
     @Override
-    public Binding get(String name, BindingResource resource)
+    public Binding get(String fullName, BindingResource resource)
     {
-        String id = Integer.toString(getBindingHashCode(name, resource));
+        String id = Integer.toString(getBindingHashCode(fullName, resource));
         Binding binding = cache.get(id);
         if (binding != null) {
-            if (!binding.getName().equals(name) && !binding.getResource().equals(resource)) {
+            if (!binding.getName().equals(fullName) && !binding.getResource().equals(resource)) {
                 throw new RuntimeException("Duplicate hash for different binding");
             }
             return binding;
@@ -99,7 +99,7 @@ public class DefaultBindingCache implements BindingCache, Initializable
     @Override
     public Binding add(Binding newBinding)
     {
-        String id = Integer.toString(getBindingHashCode(newBinding.getName(), newBinding.getResource()));
+        String id = Integer.toString(getBindingHashCode(newBinding.getFullName(), newBinding.getResource()));
         Binding binding = cache.get(id);
         if (binding != null) {
             return binding;

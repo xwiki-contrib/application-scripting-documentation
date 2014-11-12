@@ -20,10 +20,8 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.lang.reflect.Type;
 import java.net.URL;
 
-import org.reflections.util.ClasspathHelper;
 import org.xwiki.scripting.documentation.BindingResource;
 
 /**
@@ -37,11 +35,10 @@ public abstract class AbstractBindingResource implements BindingResource
 
     protected final URL url;
 
-    AbstractBindingResource(Type type)
+    AbstractBindingResource(ClassLoader classLoader, URL url)
     {
-        Class<?> klass = (Class<?>) type;
-        this.classLoader = klass.getClassLoader();
-        this.url = ClasspathHelper.forClass(klass, this.classLoader);
+        this.classLoader = classLoader;
+        this.url = url;
     }
 
     @Override

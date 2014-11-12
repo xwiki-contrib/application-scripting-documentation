@@ -20,7 +20,6 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.lang.reflect.Type;
 import java.net.URL;
 
 /**
@@ -30,9 +29,9 @@ import java.net.URL;
  */
 public class GenericBindingResource extends AbstractBindingResource
 {
-    GenericBindingResource(Type type)
+    GenericBindingResource(ClassLoader classLoader, URL url)
     {
-        super(type);
+        super(classLoader, url);
     }
 
     @Override

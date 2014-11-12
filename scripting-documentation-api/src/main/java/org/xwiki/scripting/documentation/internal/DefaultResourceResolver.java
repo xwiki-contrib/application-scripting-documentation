@@ -20,7 +20,7 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +41,7 @@ import org.xwiki.scripting.documentation.ResourceResolver;
  */
 @Component
 @Singleton
-public class DefaultResourceResolver implements ResourceResolver
+public class DefaultResourceResolver extends AbstractResourceResolver
 {
     @Inject
     private BindingResourceCache cache;
@@ -50,24 +50,15 @@ public class DefaultResourceResolver implements ResourceResolver
     private ComponentManager componentManager;
 
     @Override
-    public BindingResource resolve(Type type)
+    protected BindingResource internalResolve(ClassLoader classLoader, URL url)
     {
-        if (type == null || !(type instanceof Class<?>)) {
-            return null;
-        }
-
-        Class<?> klass = (Class<?>) type;
-        if (klass.getClassLoader() == null) {
-            return null;
-        }
-
-        BindingResource resource = cache.get(new GenericBindingResource(klass));
+        BindingResource resource = cache.get(new GenericBindingResource(classLoader, url));
         if (resource != null) {
             return resource;
         }
 
         for (ResourceResolver resolver : getResolvers()) {
-            resource = resolver.resolve(klass);
+            resource = resolver.resolve(classLoader, url);
             if (resource != null) {
                 return cache.add(resource);
             }
@@ -76,7 +67,7 @@ public class DefaultResourceResolver implements ResourceResolver
         return null;
     }
 
-    List<ResourceResolver> getResolvers()
+    private List<ResourceResolver> getResolvers()
     {
         try {
             List<ResourceResolver> resolvers = componentManager.getInstanceList(ResourceResolver.class);

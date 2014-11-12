@@ -109,7 +109,7 @@ public class ExtensionBinding extends AbstractBinding
                 != null;
 
         this.resource = (this.isLegacy) ? new LegacyResourceWrapper(getExtensionBindingResource())
-                                        : super.getResource();
+                                        : getExtensionBindingResource();
     }
 
     private ExtensionBindingResource getExtensionBindingResource()
@@ -127,7 +127,7 @@ public class ExtensionBinding extends AbstractBinding
     public URL getDocLink()
     {
         try {
-            return new URL(getResource().getDocBaseURL() + getClassPath() + HTML_EXT);
+            return new URL(resource.getDocBaseURL() + getClassPath() + HTML_EXT);
         } catch (Exception e) {
             return null;
         }

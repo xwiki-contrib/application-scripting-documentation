@@ -22,7 +22,6 @@ package org.xwiki.scripting.documentation.internal;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Set;
 
@@ -85,9 +84,9 @@ public class ExtensionBindingResource extends AbstractBindingResource
         }
     }
 
-    ExtensionBindingResource(Type type, ExtensionRepositoryManager extensionRepositoryManager)
+    ExtensionBindingResource(ClassLoader classLoader, URL url, ExtensionRepositoryManager extensionRepositoryManager)
     {
-        super(type);
+        super(classLoader, url);
         this.extensionRepositoryManager = extensionRepositoryManager;
     }
 

@@ -21,6 +21,7 @@
 package org.xwiki.scripting.documentation;
 
 import java.lang.reflect.Type;
+import java.net.URL;
 
 import org.xwiki.component.annotation.Role;
 
@@ -39,4 +40,13 @@ public interface ResourceResolver
      * @return the binding resource, or null if none where found.
      */
     BindingResource resolve(Type type);
+
+    /**
+     * Find the binding resource providing a raw ressource
+     *
+     * @param classLoader the classloader that have load the resource.
+     * @param url the URL of the resource in that classloader.
+     * @return the binding resource, or null if none where found.
+     */
+    BindingResource resolve(ClassLoader classLoader, URL url);
 }

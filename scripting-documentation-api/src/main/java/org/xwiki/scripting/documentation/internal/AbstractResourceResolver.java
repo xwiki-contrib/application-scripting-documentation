@@ -20,38 +20,51 @@
 
 package org.xwiki.scripting.documentation.internal;
 
+import java.lang.reflect.Type;
 import java.net.URL;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.xwiki.component.annotation.Component;
-import org.xwiki.extension.repository.ExtensionRepositoryManager;
+import org.reflections.util.ClasspathHelper;
 import org.xwiki.scripting.documentation.BindingResource;
+import org.xwiki.scripting.documentation.ResourceResolver;
 
 /**
- * Find the extension resource corresponding to a given type.
+ * Base class for resource resolvers.
  *
  * @version $Id$
  */
-@Component
-@Named("extension")
-@Singleton
-public class ExtensionResourceResolver extends AbstractResourceResolver
+public abstract class AbstractResourceResolver implements ResourceResolver
 {
-    @Inject
-    private ExtensionRepositoryManager extensionRepositoryManager;
-
     @Override
-    public BindingResource internalResolve(ClassLoader classLoader, URL url)
+    public BindingResource resolve(Type type)
     {
-        ExtensionBindingResource resource = new ExtensionBindingResource(classLoader, url, extensionRepositoryManager);
-
-        if (resource.getGroupId() == null || UrlChecker.getURL(resource.getDocBaseURL() + "index.html") == null) {
+        if (type == null || !(type instanceof Class<?>)) {
             return null;
         }
 
-        return resource;
+        Class<?> klass = (Class<?>) type;
+
+        ClassLoader classLoader = ((Class<?>) type).getClassLoader();
+        if (classLoader == null) {
+            return null;
+        }
+
+        URL url = ClasspathHelper.forClass(((Class<?>) type), classLoader);
+        if (url == null) {
+            return null;
+        }
+
+        return internalResolve(classLoader, url);
     }
+
+    @Override
+    public BindingResource resolve(ClassLoader classLoader, URL url)
+    {
+        if (classLoader == null || url == null) {
+            return null;
+        }
+
+        return internalResolve(classLoader, url);
+    }
+
+    protected abstract BindingResource internalResolve(ClassLoader classLoader, URL url);
 }

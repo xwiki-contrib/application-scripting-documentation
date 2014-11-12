@@ -22,10 +22,13 @@ package org.xwiki.scripting.documentation.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.xwiki.localization.LocalizationManager;
+import org.xwiki.localization.Translation;
 import org.xwiki.script.service.ScriptService;
 import org.xwiki.scripting.documentation.Binding;
 import org.xwiki.scripting.documentation.BindingCache;
@@ -49,6 +52,12 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
 
     @Inject
     private BindingCache bindingCache;
+
+    /**
+     * Used to access translations.
+     */
+    @Inject
+    private LocalizationManager localization;
 
     protected abstract Map<String, Class<?>> getBindings();
 
@@ -74,13 +83,26 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
                     }
 
                     binding =
-                        bindingCache.add(new ExtensionBinding(klass, name, fullName, getType(), null, resource));
+                        bindingCache.add(
+                            new ExtensionBinding(klass, name, fullName, getType(),
+                                getDescription(getType(), name), resource));
                 }
                 bindings.add(binding);
             }
         }
 
         return bindings;
+    }
+
+    private String getDescription(BindingKind type, String name)
+    {
+        Translation translation = this.localization.getTranslation(
+            "scriptdoc." + type.toString() + '.' + name + ".description",  Locale.getDefault());
+
+        if (translation != null) {
+            return translation.getKey();
+        }
+        return null;
     }
 
     private static boolean isInternal(Class<?> klass) {

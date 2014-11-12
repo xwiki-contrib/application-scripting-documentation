@@ -68,6 +68,15 @@ def getLabel(def check, def word, def style) {
   }
 }
 
+def getDescription(def binding) {
+  def desc = binding.description;
+  if (desc) {
+    return services.localization.render(desc);
+  } else {
+    return " ";
+  }
+}
+
 xwiki.ssfx.use("js/xwiki/table/table.css");
 xwiki.jsfx.use("js/xwiki/table/tablefilterNsort.js", true);
 
@@ -75,7 +84,7 @@ ScriptBindingsFinder bf = services.component.getComponentManager().getInstance(S
 println '(% class="grid sortable filterable" id="tableid" %)';
 println '(% class="sortHeader" %)|= Binding Kind |= Binding Name |= Binding Class |= Deprecated |= Legacy |= Internal |= Binding Module';
 bf.find().sort(){ it.fullName.toLowerCase() }.each() {
-println '|' + it.kind + '|' + it.fullName + '|' + getBindingDocLink(it)+ '|' + getLabel(it.isDeprecated(),"Deprecated","info") + '|' + getLabel(it.isLegacy(),"Legacy","warning") + '|' + getLabel(it.isInternal(),"Internal","danger") + '|' + getModuleDocLink(it.resource);
+println '|' + it.kind + '|' + it.fullName + '|' + getBindingDocLink(it)+ '|' + getDescription(it) + '|' + getLabel(it.isDeprecated(),"Deprecated","info") + '|' + getLabel(it.isLegacy(),"Legacy","warning") + '|' + getLabel(it.isInternal(),"Internal","danger") + '|' + getModuleDocLink(it.resource);
 }
 {{/groovy}}</content>
 </xwikidoc>

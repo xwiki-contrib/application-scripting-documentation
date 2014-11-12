@@ -101,9 +101,48 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         return bindings;
     }
 
-    private Binding newBinding(Class<?> klass, String name, String fullName, BindingResource resource)
+    @Override
+    public List<Binding> find(BindingKind kind)
     {
-        Binding binding;
+        if (kind != getType()) {
+            return null;
+        }
+
+        return find();
+    }
+
+    @Override
+    public Binding find(String name)
+    {
+        Class<?> klass = getBindings().get(name);
+
+        if (klass == null) {
+            return null;
+        }
+
+        String fullName = getFullName(name);
+        BindingResource resource = resourceResolver.resolve(klass);
+        Binding binding = bindingCache.get(fullName, resource, getType());
+        if (binding == null) {
+            binding = newBinding(klass, name, fullName, resource);
+        }
+        return binding;
+    }
+
+    @Override
+    public Binding find(BindingKind kind, String name)
+    {
+        if (kind != getType()) {
+            return null;
+        }
+
+        return find(name);
+    }
+
+    private Binding newBinding(Class<?> bindingClass, String name, String fullName, BindingResource resource)
+    {
+        Class<?> klass = bindingClass;
+
         if (isInternal(klass)) {
             klass = tryGettingPublicSuperClassOrInterface(klass);
         }
@@ -134,7 +173,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
             description = translation.getKey();
         }
 
-
+        Binding binding;
         if (resource != null && resource instanceof ExtensionBindingResource) {
             binding =
                 bindingCache.add(

@@ -34,6 +34,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.scripting.documentation.Binding;
+import org.xwiki.scripting.documentation.BindingKind;
 import org.xwiki.scripting.documentation.ScriptBindingsFinder;
 
 /**
@@ -62,6 +63,42 @@ public class DefaultScriptBindingsFinder implements ScriptBindingsFinder
         return bindings;
     }
 
+    @Override
+    public List<Binding> find(BindingKind kind)
+    {
+        ScriptBindingsFinder finder = getBindingsFinder(kind);
+        if (finder == null) {
+            return Collections.emptyList();
+        }
+        return finder.find();
+    }
+
+    @Override
+    public Binding find(String name)
+    {
+        List<Binding> bindings = new ArrayList<Binding>();
+        for (ScriptBindingsFinder finder : getBindingsFinder()) {
+            Binding binding = finder.find(name);
+            if (binding != null) {
+                return binding;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Binding find(BindingKind kind, String name)
+    {
+        ScriptBindingsFinder finder = getBindingsFinder(kind);
+        if (finder != null) {
+            Binding binding = finder.find(name);
+            if (binding != null) {
+                return binding;
+            }
+        }
+        return null;
+    }
+
     /**
      * @return all bindings finders.
      */
@@ -77,4 +114,12 @@ public class DefaultScriptBindingsFinder implements ScriptBindingsFinder
         }
     }
 
+    private ScriptBindingsFinder getBindingsFinder(BindingKind kind)
+    {
+        try {
+            return componentManager.get().getInstance((Type) ScriptBindingsFinder.class, kind.toString());
+        } catch (ComponentLookupException e) {
+            return null;
+        }
+    }
 }

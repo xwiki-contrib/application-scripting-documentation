@@ -36,4 +36,23 @@ public interface ScriptBindingsFinder
      * @return a list of all bindings found.
      */
     List<Binding> find();
+
+    /**
+     * @param kind a binding kind.
+     * @return a list of all bindings of given kind.
+     */
+    List<Binding> find(BindingKind kind);
+
+    /**
+     * @param name a binding name.
+     * @return first bindings of given name.
+     */
+    Binding find(String name);
+
+    /**
+     * @param kind a binding kind.
+     * @param name a binding name.
+     * @return the bindings matching the given kind and name. Null if none where found.
+     */
+    Binding find(BindingKind kind, String name);
 }

@@ -85,15 +85,15 @@ public class DefaultBindingCache implements BindingCache, Initializable
     }
 
     @Override
-    public Binding get(String fullName, BindingResource resource, BindingKind kind)
+    public Binding get(String name, BindingResource resource, BindingKind kind)
     {
-        String id = Integer.toString(getBindingHashCode(fullName, resource, kind));
+        String id = Integer.toString(getBindingHashCode(name, resource, kind));
         Binding binding = cache.get(id);
         if (binding != null) {
-            if (!binding.getName().equals(fullName)
-                && ((binding.getResource() == null && resource != null)
-                  || binding.getResource() != null && !binding.getResource().equals(resource))
-                && !binding.getKind().equals(kind)) {
+            if (!binding.getName().equals(name)
+                || (binding.getResource() == null && resource != null)
+                || (binding.getResource() != null && !binding.getResource().equals(resource))
+                || !binding.getKind().equals(kind)) {
                 throw new RuntimeException("Duplicate hash for different binding");
             }
             return binding;
@@ -111,7 +111,7 @@ public class DefaultBindingCache implements BindingCache, Initializable
             return binding;
         }
 
-        int computedHash = getBindingHashCode(newBinding.getFullName(), newBinding.getResource(), newBinding.getKind());
+        int computedHash = getBindingHashCode(newBinding.getName(), newBinding.getResource(), newBinding.getKind());
         if (hash != computedHash) {
             throw new RuntimeException("Binding hash does not match computed cache hash.");
         }

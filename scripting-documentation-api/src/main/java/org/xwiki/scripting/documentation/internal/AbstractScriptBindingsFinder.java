@@ -91,7 +91,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
             Class<?> klass = entry.getValue();
 
             BindingResource resource = resourceResolver.resolve(klass);
-            Binding binding = bindingCache.get(fullName, resource, getType());
+            Binding binding = bindingCache.get(name, resource, getType());
             if (binding == null) {
                 binding = newBinding(klass, name, fullName, resource);
             }
@@ -122,7 +122,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
 
         String fullName = getFullName(name);
         BindingResource resource = resourceResolver.resolve(klass);
-        Binding binding = bindingCache.get(fullName, resource, getType());
+        Binding binding = bindingCache.get(name, resource, getType());
         if (binding == null) {
             binding = newBinding(klass, name, fullName, resource);
         }

@@ -132,6 +132,8 @@ public abstract class AbstractBinding implements Binding
     @Override
     public int hashCode()
     {
-        return 31 * name.hashCode() + kind.hashCode();
+        int result = name.hashCode();
+        result = 31 * result + kind.hashCode();
+        return result;
     }
 }

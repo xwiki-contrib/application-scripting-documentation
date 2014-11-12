@@ -59,16 +59,4 @@ public class GenericBinding extends AbstractBinding
     {
         return null;
     }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        return this == o || o instanceof GenericBinding && super.equals(o);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return super.hashCode();
-    }
 }

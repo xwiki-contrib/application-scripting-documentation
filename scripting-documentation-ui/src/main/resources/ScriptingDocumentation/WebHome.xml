@@ -85,7 +85,7 @@ xwiki.jsfx.use("js/xwiki/table/tablefilterNsort.js", true);
 
 ScriptBindingsFinder bf = services.component.getComponentManager().getInstance(ScriptBindingsFinder.class);
 println '(% class="grid sortable filterable" id="tableid" %)';
-println '(% class="sortHeader" %)|= Binding Kind |= Binding Name |= Binding Class |= Deprecated |= Legacy |= Internal |= Binding Module';
+println '(% class="sortHeader" %)|= Binding Kind |= Binding Name |= Binding Class |= Description |= Deprecated |= Legacy |= Internal |= Binding Module';
 bf.find().sort(){ it.fullName.toLowerCase() }.each() {
 println '|' + it.kind + '|' + it.fullName + '|' + getBindingDocLink(it)+ '|' + getDescription(it) + '|' + getLabel(it.isDeprecated(),"Deprecated","info") + '|' + getLabel(it.isLegacy(),"Legacy","warning") + '|' + getLabel(it.isInternal(),"Internal","danger") + '|' + getModuleDocLink(it.resource);
 }

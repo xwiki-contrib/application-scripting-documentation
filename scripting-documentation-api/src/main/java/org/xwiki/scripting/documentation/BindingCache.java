@@ -41,9 +41,10 @@ public interface BindingCache
      *
      * @param name a binding name.
      * @param resource the resource providing the binding.
+     * @param kind the kind of binding.
      * @return the matching binding in the cache, or null if that binding is not in the cache.
      */
-    Binding get(String name, BindingResource resource);
+    Binding get(String name, BindingResource resource, BindingKind kind);
 
     /**
      * Add the given binding to the cache if not already available in the cache.

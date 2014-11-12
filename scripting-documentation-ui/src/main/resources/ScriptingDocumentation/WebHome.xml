@@ -52,6 +52,9 @@ def getBindingDocLink(def binding) {
 }
 
 def getModuleDocLink(def module) {
+  if (!module) {
+    return " ";
+  }
   def moduleDocLink = module.docLink;
   if (moduleDocLink) {
     return "[[${module.id}&gt;&gt;$moduleDocLink]]";

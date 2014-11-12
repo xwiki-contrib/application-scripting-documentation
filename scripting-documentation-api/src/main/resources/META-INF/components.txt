@@ -7,4 +7,5 @@ org.xwiki.scripting.documentation.internal.InternalPluginScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.PluginScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.ScriptScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.ServiceScriptBindingsFinder
+org.xwiki.scripting.documentation.internal.TemplateScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.VelocityScriptBindingsFinder

@@ -33,6 +33,11 @@ public class BindingKind
     public static final BindingKind VELOCITY = new BindingKind("velocity");
 
     /**
+     * Bindings found in the velocity context (excluding those in script context).
+     */
+    public static final BindingKind TEMPLATE = new BindingKind("template");
+
+    /**
      * Bindings found in the script context.
      */
     public static final BindingKind SCRIPT = new BindingKind("script");

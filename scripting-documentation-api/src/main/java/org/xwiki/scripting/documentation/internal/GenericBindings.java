@@ -20,50 +20,43 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.net.URL;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.apache.velocity.VelocityContext;
-import org.xwiki.component.annotation.Component;
 import org.xwiki.scripting.documentation.BindingKind;
+import org.xwiki.scripting.documentation.BindingResource;
 
 /**
- * Search for bindings in the velocity context.
+ * Please comment here
  *
  * @version $Id$
  */
-@Component
-@Named("velocity")
-@Singleton
-public class VelocityScriptBindingsFinder extends AbstractVelocityScriptBindingFinder
+public class GenericBindings extends AbstractBinding
 {
-    /**
-     * @return the map of classes bindings in all velocity contexts
-     */
-    protected Map<String, Class<?>> getBindings()
-    {
-        VelocityContext vContext = getVelocityContext();
-        Map<String, Class<?>> bindings = new HashMap<String, Class<?>>();
-        while (vContext != null) {
-            addAllBinding(vContext, bindings);
-            vContext = (VelocityContext) vContext.getChainedContext();
-        }
+    private final URL docLink;
 
-        return bindings;
+    GenericBindings(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
+        String description)
+    {
+        this(type, name, fullName, kind, isInternal, isDeprecated, description, null);
+    }
+
+    GenericBindings(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
+        String description, URL docLink)
+    {
+        super(type, name, fullName, kind, isInternal, isDeprecated, description);
+        this.docLink = docLink;
     }
 
     @Override
-    protected String getFullName(String name)
+    public URL getDocLink()
     {
-        return name;
+        return docLink;
     }
 
     @Override
-    protected BindingKind getType()
+    public BindingResource getResource()
     {
-        return BindingKind.VELOCITY;
+        return null;
     }
 }

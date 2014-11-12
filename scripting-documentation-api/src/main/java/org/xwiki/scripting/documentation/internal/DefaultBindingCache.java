@@ -32,6 +32,7 @@ import org.xwiki.component.phase.Initializable;
 import org.xwiki.component.phase.InitializationException;
 import org.xwiki.scripting.documentation.Binding;
 import org.xwiki.scripting.documentation.BindingCache;
+import org.xwiki.scripting.documentation.BindingKind;
 import org.xwiki.scripting.documentation.BindingResource;
 
 /**
@@ -75,20 +76,24 @@ public class DefaultBindingCache implements BindingCache, Initializable
         cache = newCache();
     }
 
-    private static int getBindingHashCode(String name, BindingResource resource)
+    private static int getBindingHashCode(String name, BindingResource resource, BindingKind kind)
     {
-        int result = resource.hashCode();
+        int result = (resource != null) ? resource.hashCode() : 0;
         result = 31 * result + name.hashCode();
+        result = 31 * result + kind.hashCode();
         return result;
     }
 
     @Override
-    public Binding get(String fullName, BindingResource resource)
+    public Binding get(String fullName, BindingResource resource, BindingKind kind)
     {
-        String id = Integer.toString(getBindingHashCode(fullName, resource));
+        String id = Integer.toString(getBindingHashCode(fullName, resource, kind));
         Binding binding = cache.get(id);
         if (binding != null) {
-            if (!binding.getName().equals(fullName) && !binding.getResource().equals(resource)) {
+            if (!binding.getName().equals(fullName)
+                && ((binding.getResource() == null && resource != null)
+                  || binding.getResource() != null && !binding.getResource().equals(resource))
+                && !binding.getKind().equals(kind)) {
                 throw new RuntimeException("Duplicate hash for different binding");
             }
             return binding;
@@ -99,7 +104,8 @@ public class DefaultBindingCache implements BindingCache, Initializable
     @Override
     public Binding add(Binding newBinding)
     {
-        String id = Integer.toString(getBindingHashCode(newBinding.getFullName(), newBinding.getResource()));
+        String id = Integer.toString(
+            getBindingHashCode(newBinding.getFullName(), newBinding.getResource(), newBinding.getKind()));
         Binding binding = cache.get(id);
         if (binding != null) {
             return binding;

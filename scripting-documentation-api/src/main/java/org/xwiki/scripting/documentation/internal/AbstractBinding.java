@@ -20,12 +20,10 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import org.xwiki.scripting.documentation.Binding;
 import org.xwiki.scripting.documentation.BindingKind;
-import org.xwiki.scripting.documentation.BindingResource;
 
 /**
  * Abstract base class for java bindings.
@@ -43,27 +41,19 @@ public abstract class AbstractBinding implements Binding
     private final boolean isInternal;
     private final boolean isDeprecated;
     private final String description;
-    private final BindingResource bindingResource;
 
-    AbstractBinding(Type type, String name, String fullName, BindingKind kind, String description,
-        BindingResource resource)
+    AbstractBinding(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
+        String description)
     {
         this.type = type;
         this.name = name;
         this.fullName = fullName;
         this.kind = kind;
 
-        this.isInternal = getBindingClass().getCanonicalName().contains(".internal.");
-        boolean deprecated = false;
-        for (Annotation annotation :  getBindingClass().getAnnotations()) {
-            if (annotation instanceof Deprecated) {
-                deprecated = true;
-            }
-        }
-        isDeprecated = deprecated;
+        this.isInternal = isInternal;
+        this.isDeprecated = isDeprecated;
 
         this.description = description;
-        this.bindingResource = resource;
     }
 
     /**
@@ -72,14 +62,6 @@ public abstract class AbstractBinding implements Binding
     public Class<?> getBindingClass()
     {
         return (type instanceof Class<?>) ? (Class<?>) type : null;
-    }
-
-    /**
-     * @return the resource providing this binding.
-     */
-    public BindingResource getBindingResource()
-    {
-        return bindingResource;
     }
 
     /**
@@ -136,11 +118,5 @@ public abstract class AbstractBinding implements Binding
     public String getDescription()
     {
         return description;
-    }
-
-    @Override
-    public BindingResource getResource()
-    {
-        return bindingResource;
     }
 }

@@ -20,50 +20,46 @@
 
 package org.xwiki.scripting.documentation.internal;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import javax.inject.Inject;
 
 import org.apache.velocity.VelocityContext;
-import org.xwiki.component.annotation.Component;
-import org.xwiki.scripting.documentation.BindingKind;
+import org.slf4j.Logger;
+import org.xwiki.velocity.VelocityContextFactory;
+import org.xwiki.velocity.XWikiVelocityException;
 
 /**
- * Search for bindings in the velocity context.
+ * Abstract base class for velocity bindings finders.
  *
  * @version $Id$
  */
-@Component
-@Named("velocity")
-@Singleton
-public class VelocityScriptBindingsFinder extends AbstractVelocityScriptBindingFinder
+public abstract class AbstractVelocityScriptBindingFinder extends AbstractScriptBindingsFinder
 {
     /**
-     * @return the map of classes bindings in all velocity contexts
+     * Used to get the Velocity Context from which we retrieve the list of bound variables.
      */
-    protected Map<String, Class<?>> getBindings()
+    @Inject
+    private VelocityContextFactory velocityContextFactory;
+
+    @Inject
+    private Logger logger;
+
+    protected VelocityContext getVelocityContext()
     {
-        VelocityContext vContext = getVelocityContext();
-        Map<String, Class<?>> bindings = new HashMap<String, Class<?>>();
-        while (vContext != null) {
-            addAllBinding(vContext, bindings);
-            vContext = (VelocityContext) vContext.getChainedContext();
+        try {
+            return this.velocityContextFactory.createContext();
+        } catch (XWikiVelocityException e) {
+            logger.error("Unable to get a new velocity context.");
         }
-
-        return bindings;
+        return null;
     }
 
-    @Override
-    protected String getFullName(String name)
+    protected void addAllBinding(VelocityContext vcontext, Map<String, Class<?>> bindings)
     {
-        return name;
-    }
-
-    @Override
-    protected BindingKind getType()
-    {
-        return BindingKind.VELOCITY;
+        for (Object key : vcontext.getKeys()) {
+            String name = key.toString();
+            bindings.put(name, vcontext.get(name).getClass());
+        }
     }
 }

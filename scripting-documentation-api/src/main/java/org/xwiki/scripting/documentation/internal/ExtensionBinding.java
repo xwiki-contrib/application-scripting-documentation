@@ -95,26 +95,20 @@ public class ExtensionBinding extends AbstractBinding
         }
     }
 
-    ExtensionBinding(Type type, String name, String fullName, BindingKind kind, String description,
-        BindingResource resource)
+    ExtensionBinding(Type type, String name, String fullName, BindingKind kind, boolean isInternal,
+        boolean isDeprecated, String description, BindingResource resource)
     {
-        super(type, name, fullName, kind, description, resource);
-        if (!(super.getResource() instanceof ExtensionBindingResource)) {
+        super(type, name, fullName, kind, isInternal, isDeprecated, description);
+        if (!(resource instanceof ExtensionBindingResource)) {
             throw new IllegalArgumentException("Invalid binding resource type [" + getResource().getClass()
                 + "] for this binding type.");
         }
-
+        ExtensionBindingResource bindingResource = (ExtensionBindingResource) resource;
         this.isLegacy = isDeprecated()
-            && UrlChecker.getURL(getExtensionBindingResource().getLegacyDocBaseURL() + getClassPath() + HTML_EXT)
-                != null;
+            && UrlChecker.getURL(bindingResource.getLegacyDocBaseURL() + getClassPath() + HTML_EXT) != null;
 
-        this.resource = (this.isLegacy) ? new LegacyResourceWrapper(getExtensionBindingResource())
-                                        : getExtensionBindingResource();
-    }
-
-    private ExtensionBindingResource getExtensionBindingResource()
-    {
-        return (ExtensionBindingResource) super.getResource();
+        this.resource = (this.isLegacy) ? new LegacyResourceWrapper(bindingResource)
+                                        : resource;
     }
 
     @Override

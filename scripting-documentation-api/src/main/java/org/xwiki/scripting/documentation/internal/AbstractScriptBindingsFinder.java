@@ -20,15 +20,23 @@
 
 package org.xwiki.scripting.documentation.internal;
 
+import java.lang.annotation.Annotation;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.xwiki.localization.LocalizationManager;
 import org.xwiki.localization.Translation;
+import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.renderer.PrintRenderer;
+import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.rendering.renderer.printer.WikiPrinter;
 import org.xwiki.script.service.ScriptService;
 import org.xwiki.scripting.documentation.Binding;
 import org.xwiki.scripting.documentation.BindingCache;
@@ -53,6 +61,10 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     @Inject
     private BindingCache bindingCache;
 
+    @Inject
+    @Named("plain/1.0")
+    private PrintRenderer plainTextRenderer;
+
     /**
      * Used to access translations.
      */
@@ -75,38 +87,107 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
             Class<?> klass = entry.getValue();
 
             BindingResource resource = resourceResolver.resolve(klass);
-            if (resource != null && resource instanceof ExtensionBindingResource) {
-                Binding binding = bindingCache.get(fullName, resource);
-                if (binding == null) {
-                    if (isInternal(klass)) {
-                        klass = tryGettingPublicSuperClassOrInterface(klass);
-                    }
-
-                    binding =
-                        bindingCache.add(
-                            new ExtensionBinding(klass, name, fullName, getType(),
-                                getDescription(getType(), name), resource));
-                }
-                bindings.add(binding);
+            Binding binding = bindingCache.get(fullName, resource, getType());
+            if (binding == null) {
+                binding = newBinding(klass, name, fullName, resource);
             }
+            bindings.add(binding);
         }
 
         return bindings;
     }
 
-    private String getDescription(BindingKind type, String name)
+    private Binding newBinding(Class<?> klass, String name, String fullName, BindingResource resource)
     {
-        Translation translation = this.localization.getTranslation(
-            "scriptdoc." + type.toString() + '.' + name + ".description",  Locale.getDefault());
+        Binding binding;
+        if (isInternal(klass)) {
+            klass = tryGettingPublicSuperClassOrInterface(klass);
+        }
+
+        boolean isInternal = isInternal(klass);
+        boolean isDeprecated = isDeprecated(klass);
+        String description = null;
+
+        String transKey = getType().toString() + '.' + name + ".description";
+
+        Translation translation = this.localization.getTranslation("scriptdoc." + transKey,  Locale.getDefault());
+
+        if (translation == null) {
+            translation = this.localization.getTranslation("scriptdoc.internal." + transKey,  Locale.getDefault());
+            if (translation == null) {
+                translation = this.localization.getTranslation("scriptdoc.deprecated." + transKey,  Locale.getDefault());
+                if (translation != null) {
+                    isDeprecated = true;
+                } else if (resource == null) {
+                    isInternal = true;
+                }
+            } else {
+                isInternal = true;
+            }
+        }
 
         if (translation != null) {
-            return translation.getKey();
+            description = translation.getKey();
         }
-        return null;
+
+
+        if (resource != null && resource instanceof ExtensionBindingResource) {
+            binding =
+                bindingCache.add(
+                    new ExtensionBinding(klass, name, fullName, getType(), isInternal, isDeprecated, description,
+                        resource));
+        } else {
+            binding =
+                bindingCache.add(
+                    new GenericBindings(klass, name, fullName, getType(), isInternal, isDeprecated, description,
+                        getDocLink(name)));
+        }
+        return binding;
     }
 
     private static boolean isInternal(Class<?> klass) {
         return klass.getCanonicalName().contains(".internal.");
+    }
+
+    private static boolean isDeprecated(Class<?> klass)
+    {
+        for (Annotation annotation :  klass.getAnnotations()) {
+            if (annotation instanceof Deprecated) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private URL getDocLink(String name)
+    {
+        String transKey = getType().toString() + '.' + name + ".docLink";
+
+        Translation translation =
+            this.localization.getTranslation("scriptdoc." + transKey, Locale.getDefault());
+        if (translation == null) {
+            translation = this.localization.getTranslation("scriptdoc.internal." + transKey, Locale.getDefault());
+            if (translation == null) {
+                translation = this.localization.getTranslation("scriptdoc.deprecated." + transKey, Locale.getDefault());
+            }
+        }
+
+        if (translation != null) {
+            Block block = translation.render(Locale.getDefault());
+
+            WikiPrinter printer = new DefaultWikiPrinter();
+            PrintRenderer renderer = this.plainTextRenderer;
+            renderer.setPrinter(printer);
+            block.traverse(renderer);
+
+            try {
+                return new URL(printer.toString());
+            } catch (MalformedURLException e) {
+                // ignore
+            }
+        }
+
+        return null;
     }
 
     private static Class<?> tryGettingPublicSuperClassOrInterface(Class<?> klass)

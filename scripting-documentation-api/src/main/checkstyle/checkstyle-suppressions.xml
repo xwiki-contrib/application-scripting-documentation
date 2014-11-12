@@ -26,6 +26,10 @@
 
 <suppressions>
   <suppress checks="ParameterNumber" files="AbstractBinding.java"/>
+  <suppress checks="FanOutComplexity" files="AbstractScriptBindingsFinder.java"/>
+  <suppress checks="BooleanExpressionComplexity" files="DefaultBindingCache.java"/>
   <suppress checks="ParameterNumber" files="GenericBinding.java"/>
   <suppress checks="ParameterNumber" files="ExtensionBinding.java"/>
+  <!-- need suppression since version 4.3 require javadoc on privates -->
+  <suppress checks="Javadoc*" files="."/>
 </suppressions>

@@ -42,7 +42,7 @@ public interface ResourceResolver
     BindingResource resolve(Type type);
 
     /**
-     * Find the binding resource providing a raw ressource
+     * Find the binding resource providing a raw ressource.
      *
      * @param classLoader the classloader that have load the resource.
      * @param url the URL of the resource in that classloader.

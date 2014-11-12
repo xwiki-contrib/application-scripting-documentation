@@ -119,4 +119,19 @@ public abstract class AbstractBinding implements Binding
     {
         return description;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        return this == o
+            || o instanceof AbstractBinding
+            && kind.equals(((AbstractBinding) o).kind)
+            && name.equals(((AbstractBinding) o).name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return 31 * name.hashCode() + kind.hashCode();
+    }
 }

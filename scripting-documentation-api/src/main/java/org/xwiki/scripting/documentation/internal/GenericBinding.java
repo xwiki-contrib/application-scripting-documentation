@@ -27,21 +27,21 @@ import org.xwiki.scripting.documentation.BindingKind;
 import org.xwiki.scripting.documentation.BindingResource;
 
 /**
- * Please comment here
+ * Generic bindings that does not have a resource, and that may receive a custom documentation link.
  *
  * @version $Id$
  */
-public class GenericBindings extends AbstractBinding
+public class GenericBinding extends AbstractBinding
 {
     private final URL docLink;
 
-    GenericBindings(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
+    GenericBinding(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
         String description)
     {
         this(type, name, fullName, kind, isInternal, isDeprecated, description, null);
     }
 
-    GenericBindings(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
+    GenericBinding(Type type, String name, String fullName, BindingKind kind, boolean isInternal, boolean isDeprecated,
         String description, URL docLink)
     {
         super(type, name, fullName, kind, isInternal, isDeprecated, description);
@@ -58,5 +58,17 @@ public class GenericBindings extends AbstractBinding
     public BindingResource getResource()
     {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        return this == o || o instanceof GenericBinding && super.equals(o);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
     }
 }

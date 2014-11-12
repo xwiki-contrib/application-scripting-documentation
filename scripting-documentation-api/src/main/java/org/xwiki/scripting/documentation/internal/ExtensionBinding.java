@@ -132,4 +132,28 @@ public class ExtensionBinding extends AbstractBinding
     {
         return this.resource;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof ExtensionBinding)) {
+            return false;
+        }
+
+        ExtensionBinding that = (ExtensionBinding) o;
+
+        return resource.equals(that.resource) && super.equals(o);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = 31 * resource.hashCode() + getName().hashCode();
+        result = 31 * result + getKind().hashCode();
+        return result;
+    }
 }

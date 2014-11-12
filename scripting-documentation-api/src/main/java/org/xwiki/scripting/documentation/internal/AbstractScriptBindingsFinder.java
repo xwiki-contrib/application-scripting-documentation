@@ -55,6 +55,10 @@ import com.xpn.xwiki.plugin.XWikiPluginInterface;
  */
 public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFinder
 {
+    private static final String SCRIPTDOC = "scriptdoc.";
+    private static final String SCRIPTDOC_INTERNAL = SCRIPTDOC + "internal.";
+    private static final String SCRIPTDOC_DEPRECATED = SCRIPTDOC + "deprecated.";
+
     @Inject
     private ResourceResolver resourceResolver;
 
@@ -110,12 +114,12 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
 
         String transKey = getType().toString() + '.' + name + ".description";
 
-        Translation translation = this.localization.getTranslation("scriptdoc." + transKey,  Locale.getDefault());
+        Translation translation = this.localization.getTranslation(SCRIPTDOC + transKey,  Locale.getDefault());
 
         if (translation == null) {
-            translation = this.localization.getTranslation("scriptdoc.internal." + transKey,  Locale.getDefault());
+            translation = this.localization.getTranslation(SCRIPTDOC_INTERNAL + transKey,  Locale.getDefault());
             if (translation == null) {
-                translation = this.localization.getTranslation("scriptdoc.deprecated." + transKey,  Locale.getDefault());
+                translation = this.localization.getTranslation(SCRIPTDOC_DEPRECATED + transKey,  Locale.getDefault());
                 if (translation != null) {
                     isDeprecated = true;
                 } else if (resource == null) {
@@ -139,7 +143,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         } else {
             binding =
                 bindingCache.add(
-                    new GenericBindings(klass, name, fullName, getType(), isInternal, isDeprecated, description,
+                    new GenericBinding(klass, name, fullName, getType(), isInternal, isDeprecated, description,
                         getDocLink(name)));
         }
         return binding;
@@ -164,11 +168,11 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         String transKey = getType().toString() + '.' + name + ".docLink";
 
         Translation translation =
-            this.localization.getTranslation("scriptdoc." + transKey, Locale.getDefault());
+            this.localization.getTranslation(SCRIPTDOC + transKey, Locale.getDefault());
         if (translation == null) {
-            translation = this.localization.getTranslation("scriptdoc.internal." + transKey, Locale.getDefault());
+            translation = this.localization.getTranslation(SCRIPTDOC_INTERNAL + transKey, Locale.getDefault());
             if (translation == null) {
-                translation = this.localization.getTranslation("scriptdoc.deprecated." + transKey, Locale.getDefault());
+                translation = this.localization.getTranslation(SCRIPTDOC_DEPRECATED + transKey, Locale.getDefault());
             }
         }
 

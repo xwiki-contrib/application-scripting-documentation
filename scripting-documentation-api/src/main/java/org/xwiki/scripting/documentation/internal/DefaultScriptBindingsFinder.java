@@ -65,7 +65,7 @@ public class DefaultScriptBindingsFinder implements ScriptBindingsFinder
     /**
      * @return all bindings finders.
      */
-    protected List<ScriptBindingsFinder> getBindingsFinder()
+    private List<ScriptBindingsFinder> getBindingsFinder()
     {
         try {
             List<ScriptBindingsFinder> finders =

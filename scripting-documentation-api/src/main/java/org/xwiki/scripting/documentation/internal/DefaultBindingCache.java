@@ -104,11 +104,16 @@ public class DefaultBindingCache implements BindingCache, Initializable
     @Override
     public Binding add(Binding newBinding)
     {
-        String id = Integer.toString(
-            getBindingHashCode(newBinding.getFullName(), newBinding.getResource(), newBinding.getKind()));
+        int hash = newBinding.hashCode();
+        String id = Integer.toString(hash);
         Binding binding = cache.get(id);
         if (binding != null) {
             return binding;
+        }
+
+        int computedHash = getBindingHashCode(newBinding.getFullName(), newBinding.getResource(), newBinding.getKind());
+        if (hash != computedHash) {
+            throw new RuntimeException("Binding hash does not match computed cache hash.");
         }
 
         cache.set(id, newBinding);

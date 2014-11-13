@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -135,6 +136,38 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         }
 
         return find(name);
+    }
+
+    @Override
+    public List<Binding> find(Pattern regex)
+    {
+        List<Binding> bindings = new ArrayList<Binding>();
+        for (Map.Entry<String, Class<?>> entry : getBindings().entrySet()) {
+            String name = entry.getKey();
+
+            if (regex.matcher(name).matches()) {
+                String fullName = getFullName(name);
+                Class<?> klass = entry.getValue();
+
+                Binding binding = bindingCache.get(name, klass, getType());
+                if (binding == null) {
+                    binding = newBinding(klass, name, fullName);
+                }
+                bindings.add(binding);
+            }
+        }
+
+        return bindings;
+    }
+
+    @Override
+    public List<Binding> find(BindingKind kind, Pattern regex)
+    {
+        if (kind != getType()) {
+            return null;
+        }
+
+        return find(regex);
     }
 
     private Binding newBinding(Class<?> bindingClass, String name, String fullName)

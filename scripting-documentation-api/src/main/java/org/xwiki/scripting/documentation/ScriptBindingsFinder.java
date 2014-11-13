@@ -21,6 +21,7 @@
 package org.xwiki.scripting.documentation;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.xwiki.component.annotation.Role;
 
@@ -55,4 +56,17 @@ public interface ScriptBindingsFinder
      * @return the bindings matching the given kind and name. Null if none where found.
      */
     Binding find(BindingKind kind, String name);
+
+    /**
+     * @param regex a pattern to match binding name.
+     * @return a list of all bindings matching regex.
+     */
+    List<Binding> find(Pattern regex);
+
+    /**
+     * @param kind a binding kind.
+     * @param regex a binding name.
+     * @return a list of all bindings of the given kind matching regex.
+     */
+    List<Binding> find(BindingKind kind, Pattern regex);
 }

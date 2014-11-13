@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -97,6 +98,26 @@ public class DefaultScriptBindingsFinder implements ScriptBindingsFinder
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Binding> find(Pattern regex)
+    {
+        List<Binding> bindings = new ArrayList<Binding>();
+        for (ScriptBindingsFinder finder : getBindingsFinder()) {
+            bindings.addAll(finder.find(regex));
+        }
+        return bindings;
+    }
+
+    @Override
+    public List<Binding> find(BindingKind kind, Pattern regex)
+    {
+        ScriptBindingsFinder finder = getBindingsFinder(kind);
+        if (finder == null) {
+            return Collections.emptyList();
+        }
+        return finder.find(regex);
     }
 
     /**

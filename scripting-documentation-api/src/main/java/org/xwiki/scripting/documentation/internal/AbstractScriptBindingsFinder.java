@@ -104,7 +104,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     @Override
     public List<Binding> find(BindingKind kind)
     {
-        if (kind != getType()) {
+        if (!getType().equals(kind)) {
             return null;
         }
 
@@ -131,7 +131,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     @Override
     public Binding find(BindingKind kind, String name)
     {
-        if (kind != getType()) {
+        if (!getType().equals(kind)) {
             return null;
         }
 
@@ -163,7 +163,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     @Override
     public List<Binding> find(BindingKind kind, Pattern regex)
     {
-        if (kind != getType()) {
+        if (!getType().equals(kind)) {
             return null;
         }
 

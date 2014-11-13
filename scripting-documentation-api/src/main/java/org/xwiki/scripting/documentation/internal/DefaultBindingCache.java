@@ -103,6 +103,12 @@ public class DefaultBindingCache implements BindingCache, Initializable
     }
 
     @Override
+    public Binding get(int hash)
+    {
+        return cache.get(Integer.toString(hash));
+    }
+
+    @Override
     public Binding add(Binding newBinding)
     {
         int hash = newBinding.hashCode();

@@ -49,6 +49,14 @@ public interface BindingCache
     Binding get(String name, Type bindingType, BindingKind kind);
 
     /**
+     * Get a binding from the cache using its hashcode.
+     *
+     * @param hash the hashcode of the binding.
+     * @return the binding from the cache.
+     */
+    Binding get(int hash);
+
+    /**
      * Add the given binding to the cache if not already available in the cache.
      *
      * @param binding the binding to be added.

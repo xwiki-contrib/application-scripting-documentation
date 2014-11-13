@@ -155,7 +155,7 @@ public class ExtensionBinding extends AbstractBinding
     @Override
     public int hashCode()
     {
-        int result = resource.hashCode();
+        int result = getType().hashCode();
         result = 31 * result + getName().hashCode();
         result = 31 * result + getKind().hashCode();
         return result;

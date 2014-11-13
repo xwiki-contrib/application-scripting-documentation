@@ -20,6 +20,8 @@
 
 package org.xwiki.scripting.documentation.internal;
 
+import java.lang.reflect.Type;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -33,7 +35,6 @@ import org.xwiki.component.phase.InitializationException;
 import org.xwiki.scripting.documentation.Binding;
 import org.xwiki.scripting.documentation.BindingCache;
 import org.xwiki.scripting.documentation.BindingKind;
-import org.xwiki.scripting.documentation.BindingResource;
 
 /**
  * Default implementation of the binding cache.
@@ -76,23 +77,23 @@ public class DefaultBindingCache implements BindingCache, Initializable
         cache = newCache();
     }
 
-    private static int getBindingHashCode(String name, BindingResource resource, BindingKind kind)
+    private static int getBindingHashCode(String name, Type bindingType, BindingKind kind)
     {
-        int result = (resource != null) ? resource.hashCode() : 0;
+        int result = (bindingType != null) ? bindingType.hashCode() : 0;
         result = 31 * result + name.hashCode();
         result = 31 * result + kind.hashCode();
         return result;
     }
 
     @Override
-    public Binding get(String name, BindingResource resource, BindingKind kind)
+    public Binding get(String name, Type bindingType, BindingKind kind)
     {
-        String id = Integer.toString(getBindingHashCode(name, resource, kind));
+        String id = Integer.toString(getBindingHashCode(name, bindingType, kind));
         Binding binding = cache.get(id);
         if (binding != null) {
             if (!binding.getName().equals(name)
-                || (binding.getResource() == null && resource != null)
-                || (binding.getResource() != null && !binding.getResource().equals(resource))
+                || (binding.getType() == null && bindingType != null)
+                || (binding.getType() != null && !binding.getType().equals(bindingType))
                 || !binding.getKind().equals(kind)) {
                 throw new RuntimeException("Duplicate hash for different binding");
             }
@@ -111,7 +112,7 @@ public class DefaultBindingCache implements BindingCache, Initializable
             return binding;
         }
 
-        int computedHash = getBindingHashCode(newBinding.getName(), newBinding.getResource(), newBinding.getKind());
+        int computedHash = getBindingHashCode(newBinding.getName(), newBinding.getType(), newBinding.getKind());
         if (hash != computedHash) {
             throw new RuntimeException("Binding hash does not match computed cache hash.");
         }

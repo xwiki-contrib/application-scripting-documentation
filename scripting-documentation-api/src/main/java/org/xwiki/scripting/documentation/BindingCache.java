@@ -26,6 +26,8 @@ package org.xwiki.scripting.documentation;
  * @version $Id$
  */
 
+import java.lang.reflect.Type;
+
 import org.xwiki.component.annotation.Role;
 
 /**
@@ -40,11 +42,11 @@ public interface BindingCache
      * Check if the cache contains a binding matching the given fullname.
      *
      * @param name a binding name.
-     * @param resource the resource providing the binding.
+     * @param bindingType the type of this binding.
      * @param kind the kind of binding.
      * @return the matching binding in the cache, or null if that binding is not in the cache.
      */
-    Binding get(String name, BindingResource resource, BindingKind kind);
+    Binding get(String name, Type bindingType, BindingKind kind);
 
     /**
      * Add the given binding to the cache if not already available in the cache.

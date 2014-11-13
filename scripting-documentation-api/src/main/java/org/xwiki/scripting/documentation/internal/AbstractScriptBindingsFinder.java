@@ -188,11 +188,11 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         return binding;
     }
 
-    private static boolean isInternal(Class<?> klass) {
+    protected boolean isInternal(Class<?> klass) {
         return klass.getCanonicalName().contains(".internal.");
     }
 
-    private static boolean isDeprecated(Class<?> klass)
+    protected boolean isDeprecated(Class<?> klass)
     {
         for (Annotation annotation :  klass.getAnnotations()) {
             if (annotation instanceof Deprecated) {
@@ -202,7 +202,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         return false;
     }
 
-    private URL getDocLink(String name)
+    protected URL getDocLink(String name)
     {
         String transKey = getType().toString() + '.' + name + ".docLink";
 
@@ -233,7 +233,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         return null;
     }
 
-    private static Class<?> tryGettingPublicSuperClassOrInterface(Class<?> klass)
+    protected Class<?> tryGettingPublicSuperClassOrInterface(Class<?> klass)
     {
         Class<?> result = klass;
         for (Class<?> iface : klass.getInterfaces()) {
@@ -257,7 +257,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
         return klass;
     }
 
-    private static Class<?> tryGettingPublicSuperClass(Class<?> klass)
+    private Class<?> tryGettingPublicSuperClass(Class<?> klass)
     {
         Class<?> result = klass;
         Class<?> superklass = klass.getSuperclass();

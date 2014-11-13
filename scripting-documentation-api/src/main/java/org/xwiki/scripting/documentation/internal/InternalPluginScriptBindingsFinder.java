@@ -48,6 +48,12 @@ public class InternalPluginScriptBindingsFinder extends AbstractPluginScriptBind
     }
 
     @Override
+    protected boolean isInternal(Class<?> klass)
+    {
+        return true;
+    }
+
+    @Override
     protected String getFullName(String name)
     {
         return "xwiki." + name + ".getInternalPlugin()";

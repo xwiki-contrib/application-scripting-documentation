@@ -44,7 +44,7 @@ import org.xwiki.scripting.documentation.ScriptBindingsFinder;
 
 def getBindingDocLink(def binding) {
   def docLink = binding.docLink;
-  if (docLink &amp;&amp; !binding.isInternal()) {
+  if (docLink) {
     return "[[${binding.type.simpleName}&gt;&gt;$docLink]]";
   } else {
     return binding.type.simpleName

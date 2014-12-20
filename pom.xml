@@ -44,6 +44,7 @@
     <url>https://github.com/xwiki-contrib/application-scripting-documentation</url>
     <tag>HEAD</tag>
   </scm>
+  <issueManagement/>
   <developers>
     <developer>
       <id>dgervalle</id>

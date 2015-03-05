@@ -9,3 +9,4 @@ org.xwiki.scripting.documentation.internal.ScriptScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.ServiceScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.TemplateScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.VelocityScriptBindingsFinder
+org.xwiki.scripting.documentation.script.internal.BindingKindConverter

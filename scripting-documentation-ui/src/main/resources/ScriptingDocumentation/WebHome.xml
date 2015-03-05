@@ -1,93 +1,569 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
- * See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
-
-<xwikidoc version="1.1">
+<xwikidoc>
   <web>ScriptingDocumentation</web>
   <name>WebHome</name>
-  <parent>Main.WebHome</parent>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
+  <parent>Main.WebHome</parent>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1413449011000</creationDate>
   <author>xwiki:XWiki.Admin</author>
+  <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1415563613000</date>
-  <contentUpdateDate>1415563613000</contentUpdateDate>
+  <creationDate>1421958504000</creationDate>
+  <date>1425595015000</date>
+  <contentUpdateDate>1425595015000</contentUpdateDate>
   <version>1.1</version>
   <title>Scripting Documentation</title>
+  <defaultTemplate/>
+  <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{groovy}}
-import org.xwiki.scripting.documentation.ScriptBindingsFinder;
-
-def getBindingDocLink(def binding) {
-  def docLink = binding.docLink;
-  if (docLink) {
-    return "[[${binding.type.simpleName}&gt;&gt;$docLink]]";
-  } else {
-    return binding.type.simpleName
-  }
+  <object>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>ScriptingDocumentation.WebHome</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>59656f4c-f646-497b-a14b-13dafff37638</guid>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>/* Javadoc style sheet */
+/*
+Overall document style
+*/
+#javadocdiv {
+    background-color:#ffffff;
+    color:#353833;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:85%;
+    margin:0;
 }
-
-def getModuleDocLink(def module) {
-  if (!module) {
-    return " ";
-  }
-  def moduleDocLink = module.docLink;
-  if (moduleDocLink) {
-    return "[[${module.id}&gt;&gt;$moduleDocLink]]";
-  } else {
-    return module.id
-  }
+#javadocdiv a:link, #javadocdiv a:visited {
+    text-decoration:none;
+    color:#4c6b87;
 }
-
-def getLabel(def check, def word, def style) {
-  if (check) {
-    return "(% class=\"bg-$style\" style=\"text-align: center\" %)**$word**";
-  } else {
-    return " "
-  }
+#javadocdiv a:hover, #javadocdiv a:focus {
+    text-decoration:none;
+    color:#bb7a2a;
 }
-
-def getDescription(def binding) {
-  def desc = binding.description;
-  if (desc) {
-    return services.localization.render(desc);
-  } else {
-    return " ";
-  }
+#javadocdiv a:active {
+    text-decoration:none;
+    color:#4c6b87;
 }
-
-xwiki.ssfx.use("js/xwiki/table/table.css");
-xwiki.jsfx.use("js/xwiki/table/tablefilterNsort.js", true);
-
-ScriptBindingsFinder bf = services.component.getComponentManager().getInstance(ScriptBindingsFinder.class);
-println '(% class="grid sortable filterable" id="tableid" %)';
-println '(% class="sortHeader" %)|= Binding Kind |= Binding Name |= Binding Class |= Description |= Deprecated |= Legacy |= Internal |= Binding Module';
-bf.find().sort(){ it.fullName.toLowerCase() }.each() {
-println '|' + it.kind + '|' + it.fullName + '|' + getBindingDocLink(it)+ '|' + getDescription(it) + '|' + getLabel(it.isDeprecated(),"Deprecated","info") + '|' + getLabel(it.isLegacy(),"Legacy","warning") + '|' + getLabel(it.isInternal(),"Internal","danger") + '|' + getModuleDocLink(it.resource);
+#javadocdiv a[name] {
+    color:#353833;
 }
-{{/groovy}}</content>
+#javadocdiv a[name]:hover {
+    text-decoration:none;
+    color:#353833;
+}
+#javadocdiv pre {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    font-size:1em;
+    border: none;
+}
+#javadocdiv h1, #javadocdiv h2, #javadocdiv h3, #javadocdiv h4, #javadocdiv h5, #javadocdiv h6 {
+    font-weight: bold;
+}
+#javadocdiv h1 {
+    font-size:1.8em;
+}
+#javadocdiv h2 {
+    font-size:1.5em;
+}
+#javadocdiv h3 {
+    font-size:1.4em;
+}
+#javadocdiv h4 {
+    font-size:1.3em;
+}
+#javadocdiv h5 {
+    font-size:1.2em;
+}
+#javadocdiv h6 {
+    font-size:1.1em;
+}
+#javadocdiv ul {
+    list-style-type:disc;
+}
+#javadocdiv code, #javadocdiv tt {
+    font-size:0.9em;
+}
+#javadocdiv dt code {
+    font-size:1.2em;
+}
+#javadocdiv table tr td dt code {
+    font-size:1.2em;
+    vertical-align:top;
+}
+#javadocdiv sup {
+    font-size:.5em;
+}
+/*
+Document title and Copyright styles
+*/
+#javadocdiv .clear {
+    clear:both;
+    height:0px;
+    overflow:hidden;
+}
+#javadocdiv .aboutLanguage {
+    float:right;
+    padding:0px 21px;
+    font-size:.8em;
+    z-index:200;
+    margin-top:-7px;
+}
+#javadocdiv .legalCopy {
+    margin-left:.5em;
+}
+#javadocdiv .bar a, #javadocdiv .bar a:link, #javadocdiv .bar a:visited, #javadocdiv .bar a:active {
+    color:#FFFFFF;
+    text-decoration:none;
+}
+#javadocdiv .bar a:hover, #javadocdiv .bar a:focus {
+    color:#bb7a2a;
+}
+#javadocdiv .tab {
+    background-color:#0066FF;
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#ffffff;
+    padding:8px;
+    width:5em;
+    font-weight:bold;
+}
+/*
+Page header and footer styles
+*/
+#javadocdiv .header, #javadocdiv .footer {
+    clear:both;
+}
+.indexHeader {
+    margin:10px;
+    position:relative;
+}
+#javadocdiv .indexHeader h1 {
+    font-size:1.3em;
+}
+#javadocdiv .title {
+    color:#2c4557;
+    margin:10px 0;
+}
+#javadocdiv .subTitle {
+    margin:5px 0 0 0;
+}
+#javadocdiv .header ul {
+    margin:0 0 25px 0;
+    padding:0;
+}
+#javadocdiv .footer ul {
+    margin:20px 0 5px 0;
+}
+#javadocdiv .header ul li, #javadocdiv .footer ul li {
+    list-style:none;
+    font-size:1.2em;
+}
+/*
+Heading styles
+*/
+#javadocdiv div.details ul.blockList ul.blockList ul.blockList li.blockList h4, #javadocdiv div.details ul.blockList ul.blockList ul.blockListLast li.blockList h4 {
+    background-color:#dee3e9;
+    border-top:1px solid #9eadc0;
+    border-bottom:1px solid #9eadc0;
+    margin:0 0 6px -8px;
+    padding:2px 5px;
+}
+#javadocdiv ul.blockList ul.blockList ul.blockList li.blockList h3 {
+    background-color:#dee3e9;
+    border-top:1px solid #9eadc0;
+    border-bottom:1px solid #9eadc0;
+    margin:0 0 6px -8px;
+    padding:2px 5px;
+}
+#javadocdiv ul.blockList ul.blockList li.blockList h3 {
+    padding:0;
+    margin:15px 0;
+}
+#javadocdiv ul.blockList li.blockList h2 {
+    padding:0px 0 20px 0;
+}
+/*
+Page layout container styles
+*/
+#javadocdiv .contentContainer, #javadocdiv .sourceContainer, #javadocdiv .classUseContainer, #javadocdiv .serializedFormContainer, #javadocdiv .constantValuesContainer {
+    clear:both;
+    position:relative;
+}
+#javadocdiv .indexContainer {
+    margin:10px;
+    position:relative;
+    font-size:1.0em;
+}
+#javadocdiv .indexContainer h2 {
+    font-size:1.1em;
+    padding:0 0 3px 0;
+}
+#javadocdiv .indexContainer ul {
+    margin:0;
+    padding:0;
+}
+#javadocdiv .indexContainer ul li {
+    list-style:none;
+}
+#javadocdiv .contentContainer .description dl dt, #javadocdiv .contentContainer .details dl dt, #javadocdiv .serializedFormContainer dl dt {
+    font-size:1.1em;
+    font-weight:bold;
+    margin:10px 0 0 0;
+    color:#4E4E4E;
+}
+#javadocdiv .contentContainer .description dl dd, #javadocdiv .contentContainer .details dl dd, #javadocdiv .serializedFormContainer dl dd {
+    margin:10px 0 10px 20px;
+}
+#javadocdiv .serializedFormContainer dl.nameValue dt {
+    margin-left:1px;
+    font-size:1.1em;
+    display:inline;
+    font-weight:bold;
+}
+#javadocdiv .serializedFormContainer dl.nameValue dd {
+    margin:0 0 0 1px;
+    font-size:1.1em;
+    display:inline;
+}
+/*
+List styles
+*/
+#javadocdiv ul.horizontal li {
+    display:inline;
+    font-size:0.9em;
+}
+#javadocdiv ul.inheritance {
+    margin:0;
+    padding:0;
+}
+#javadocdiv ul.inheritance li {
+    display:inline;
+    list-style:none;
+}
+#javadocdiv ul.inheritance li ul.inheritance {
+    margin-left:15px;
+    padding-left:15px;
+    padding-top:1px;
+}
+#javadocdiv ul.blockList, ul.blockListLast {
+    margin:10px 0 10px 0;
+    padding:0;
+}
+#javadocdiv ul.blockList li.blockList, #javadocdiv ul.blockListLast li.blockList {
+    list-style:none;
+    margin-bottom:25px;
+}
+#javadocdiv ul.blockList ul.blockList li.blockList, #javadocdiv ul.blockList ul.blockListLast li.blockList {
+    padding:0px 20px 5px 10px;
+    border:1px solid #9eadc0;
+    background-color:#f9f9f9;
+}
+#javadocdiv ul.blockList ul.blockList ul.blockList li.blockList, #javadocdiv ul.blockList ul.blockList ul.blockListLast li.blockList {
+    padding:0 0 5px 8px;
+    background-color:#ffffff;
+    border:1px solid #9eadc0;
+    border-top:none;
+}
+#javadocdiv ul.blockList ul.blockList ul.blockList ul.blockList li.blockList {
+    margin-left:0;
+    padding-left:0;
+    padding-bottom:15px;
+    border:none;
+    border-bottom:1px solid #9eadc0;
+}
+#javadocdiv ul.blockList ul.blockList ul.blockList ul.blockList li.blockListLast {
+    list-style:none;
+    border-bottom:none;
+    padding-bottom:0;
+}
+#javadocdiv table tr td dl, #javadocdiv table tr td dl dt, #javadocdiv table tr td dl dd {
+    margin-top:0;
+    margin-bottom:1px;
+}
+/*
+Table styles
+*/
+#javadocdiv .contentContainer table, #javadocdiv .classUseContainer table, #javadocdiv .constantValuesContainer table {
+    border-bottom:1px solid #9eadc0;
+    width:100%;
+}
+#javadocdiv .contentContainer ul li table, #javadocdiv .classUseContainer ul li table, #javadocdiv .constantValuesContainer ul li table {
+    width:100%;
+}
+#javadocdiv .contentContainer .description table, #javadocdiv .contentContainer .details table {
+    border-bottom:none;
+}
+#javadocdiv .contentContainer ul li table th.colOne, #javadocdiv .contentContainer ul li table th.colFirst, #javadocdiv .contentContainer ul li table th.colLast, #javadocdiv .classUseContainer ul li table th, #javadocdiv .constantValuesContainer ul li table th, #javadocdiv .contentContainer ul li table td.colOne, #javadocdiv .contentContainer ul li table td.colFirst, #javadocdiv .contentContainer ul li table td.colLast, #javadocdiv .classUseContainer ul li table td, #javadocdiv .constantValuesContainer ul li table td{
+    vertical-align:top;
+    padding-right:20px;
+}
+#javadocdiv .contentContainer ul li table th.colLast, #javadocdiv .classUseContainer ul li table th.colLast,#javadocdiv .constantValuesContainer ul li table th.colLast,
+#javadocdiv .contentContainer ul li table td.colLast, #javadocdiv .classUseContainer ul li table td.colLast,#javadocdiv .constantValuesContainer ul li table td.colLast,
+#javadocdiv .contentContainer ul li table th.colOne, #javadocdiv .classUseContainer ul li table th.colOne,
+#javadocdiv .contentContainer ul li table td.colOne, #javadocdiv .classUseContainer ul li table td.colOne {
+    padding-right:3px;
+}
+#javadocdiv .overviewSummary caption, #javadocdiv .packageSummary caption, #javadocdiv .contentContainer ul.blockList li.blockList caption, #javadocdiv .summary caption, .classUseContainer caption, #javadocdiv .constantValuesContainer caption {
+    position:relative;
+    text-align:left;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    font-weight:bold;
+    clear:none;
+    overflow:hidden;
+    padding:0px;
+    margin:0px;
+}
+#javadocdiv caption a:link, caption a:hover, #javadocdiv caption a:active, caption a:visited {
+    color:#FFFFFF;
+}
+#javadocdiv .overviewSummary caption span, #javadocdiv .packageSummary caption span, #javadocdiv .contentContainer ul.blockList li.blockList caption span, #javadocdiv .summary caption span, #javadocdiv .classUseContainer caption span, #javadocdiv .constantValuesContainer caption span {
+    white-space:nowrap;
+    padding-top:8px;
+    padding-left:8px;
+    display:block;
+    float:left;
+    height:18px;
+}
+#javadocdiv .overviewSummary .tabEnd, #javadocdiv .packageSummary .tabEnd, #javadocdiv .contentContainer ul.blockList li.blockList .tabEnd, #javadocdiv .summary .tabEnd, .classUseContainer .tabEnd, #javadocdiv .constantValuesContainer .tabEnd {
+    width:10px;
+    background-repeat:no-repeat;
+    background-position:top right;
+    position:relative;
+    float:left;
+}
+#javadocdiv ul.blockList ul.blockList li.blockList table {
+    margin:0 0 12px 0px;
+    width:100%;
+    table-layout: fixed;
+}
+#javadocdiv .tableSubHeadingColor {
+    background-color: #EEEEFF;
+}
+#javadocdiv .altColor {
+    background-color:#eeeeef;
+}
+#javadocdiv .rowColor {
+    background-color:#ffffff;
+}
+#javadocdiv .overviewSummary td, #javadocdiv .packageSummary td, #javadocdiv .contentContainer ul.blockList li.blockList td, #javadocdiv .summary td, #javadocdiv .classUseContainer td, #javadocdiv .constantValuesContainer td {
+    text-align:left;
+    padding:3px 3px 3px 7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#javadocdiv th.colFirst, #javadocdiv th.colLast, #javadocdiv th.colOne, #javadocdiv .constantValuesContainer th {
+    background:#dee3e9;
+    border-top:1px solid #9eadc0;
+    border-bottom:1px solid #9eadc0;
+    text-align:left;
+    padding:3px 3px 3px 7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#javadocdiv td.colOne a:link, #javadocdiv td.colOne a:active, #javadocdiv td.colOne a:visited, #javadocdiv td.colOne a:hover, #javadocdiv td.colFirst a:link, #javadocdiv td.colFirst a:active, #javadocdiv td.colFirst a:visited, #javadocdiv td.colFirst a:hover, #javadocdiv td.colLast a:link, #javadocdiv td.colLast a:active, #javadocdiv td.colLast a:visited, #javadocdiv td.colLast a:hover, #javadocdiv .constantValuesContainer td a:link, #javadocdiv .constantValuesContainer td a:active, #javadocdiv .constantValuesContainer td a:visited, #javadocdiv .constantValuesContainer td a:hover {
+    font-weight:bold;
+}
+#javadocdiv td.colFirst, #javadocdiv th.colFirst {
+    border-left:1px solid #9eadc0;
+    white-space:nowrap;
+}
+#javadocdiv td.colLast, #javadocdiv th.colLast {
+    border-right:1px solid #9eadc0;
+}
+#javadocdiv td.colOne, #javadocdiv th.colOne {
+    border-right:1px solid #9eadc0;
+    border-left:1px solid #9eadc0;
+}
+#javadocdiv table.overviewSummary  {
+    padding:0px;
+    margin-left:0px;
+}
+#javadocdiv table.overviewSummary td.colFirst, #javadocdiv table.overviewSummary th.colFirst,
+#javadocdiv table.overviewSummary td.colOne, #javadocdiv table.overviewSummary th.colOne {
+    width:35%;
+    vertical-align:middle;
+}
+#javadocdiv table.packageSummary td.colFirst, #javadocdiv table.overviewSummary th.colFirst {
+    width:35%;
+    vertical-align:middle;
+}
+/*
+Content styles
+*/
+blockquote {
+  padding: inherit;
+  margin: 0 0 20px;
+  font-size: inherit;
+  border-left: none;
+}
+#javadocdiv .description pre {
+    margin-top:0;
+}
+#javadocdiv .deprecatedContent {
+    margin:0;
+    padding:10px 0;
+}
+#javadocdiv .docSummary {
+    padding:0;
+}
+/*
+Formatting effect styles
+*/
+#javadocdiv .sourceLineNo {
+    color:green;
+    padding:0 30px 0 0;
+}
+#javadocdiv h1.hidden {
+    visibility:hidden;
+    overflow:hidden;
+    font-size:.9em;
+}
+#javadocdiv .block {
+    display:block;
+    margin:3px 0 0 0;
+}
+#javadocdiv .strong {
+    font-weight:bold;
+}</code>
+    </property>
+    <property>
+      <contentType>CSS</contentType>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <content>{{velocity}}
+#if ($xcontext.action == 'get')
+  #if ($request.url &amp;&amp; $request.url != '')
+    #set($docContent = $xwiki.getURLContent($request.url))
+    #set($docContentStart = 
+           $docContent.indexOf('&lt;!-- ======== START OF CLASS DATA ======== --&gt;'))
+    #set($docContentEnd = 
+           $docContent.indexOf('&lt;!-- ========= END OF CLASS DATA ========= --&gt;'))
+    #if($docContentStart != -1 &amp;&amp; $docContentEnd != -1)
+      #set($ok = $response.setHeader("Cache-Control", 'private'))
+      #set($ok = $response.setHeader("Pragma", 'cache'))
+      #set($expires = $datetool.date.getTime())
+      #set($expires = $expires+120000)##604800000)
+      #set($expires = $datetool.toDate($expires))
+      #set($ok = $response.setDateHeader("Expires",$expires.getTime()))
+      #set($ok = $response.setContentType("text/html"))
+      #set($ok = $xcontext.setFinished(true))
+      #set($ok = $response.getOutputStream().write($docContent.substring($docContentStart, $docContentEnd).getBytes()))
+    #end
+  #else
+&lt;div class="box infomessage"&gt;Select a script binding on your right to get more detailed information.&lt;/div&gt;
+  #end
+#else
+$xwiki.ssx.use($doc)
+{{html}}
+&lt;div javadoc-displayer&gt;&lt;/div&gt;
+{{/html}}
+#end
+{{/velocity}}</content>
 </xwikidoc>

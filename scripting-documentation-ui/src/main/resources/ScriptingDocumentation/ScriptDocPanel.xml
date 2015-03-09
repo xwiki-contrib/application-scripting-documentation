@@ -12,8 +12,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421597575000</creationDate>
-  <date>1425594938000</date>
-  <contentUpdateDate>1423930361000</contentUpdateDate>
+  <date>1425893863000</date>
+  <contentUpdateDate>1425642453000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <defaultTemplate/>
@@ -378,14 +378,14 @@ require(['jquery','angular'],
   /**
    * Filter service - Hold active filters for the list of bindings
    */
-  services.factory('filterService', 
+  services.factory('filterService',
                    function() {
     return {
 
       /**
        * Active filters on the list
-       */  
-      activeFilters: { 
+       */
+      activeFilters: {
         internal: false,
         deprecated: false,
         legacy: false,
@@ -401,7 +401,7 @@ require(['jquery','angular'],
        * bindings.
        *
        * @param value set to true to display deprecated and legacy bindings.
-       * @return return true when deprecated and legacy bindings are NOT 
+       * @return return true when deprecated and legacy bindings are NOT
        *         filtered out.
        */
       deprecated: function(value) {
@@ -439,9 +439,9 @@ require(['jquery','angular'],
   /**
   * Javadoc service - Manage the currently displayed javadoc location
   */
-  services.factory('javadocService', 
-                   ['xwikiService',
-                    function(xwikiService) {
+  services.factory('javadocService',
+                   ['xwikiService', '$location',
+                    function(xwikiService, $location) {
 
     var _location = null, _base = null, _hash = null, _element = $('html'),
         absUrlRE = /^https?:\/\//i,
@@ -460,7 +460,7 @@ require(['jquery','angular'],
 
     function reduceURL(url) {
       if (!parentRE.test(url)) return url;
-      return reduceURL(url.replace(parentRE, ""));      
+      return reduceURL(url.replace(parentRE, ""));
     }
 
     function getHost(url) {
@@ -482,9 +482,9 @@ require(['jquery','angular'],
     }
 
     function buildJavadocURL(parsedUrl) {
-      return 'http://nexus.xwiki.org/nexus/service/local/repositories/releases/archive/' 
-        + parsedUrl.groupId + '/' + parsedUrl.artifactId + '/' + parsedUrl.version + '/' 
-        + parsedUrl.artifactId + '-' + parsedUrl.version + '-javadoc.jar/!/' 
+      return 'http://nexus.xwiki.org/nexus/service/local/repositories/releases/archive/'
+        + parsedUrl.groupId + '/' + parsedUrl.artifactId + '/' + parsedUrl.version + '/'
+        + parsedUrl.artifactId + '-' + parsedUrl.version + '-javadoc.jar/!/'
         + parsedUrl.jdocPath;
     }
 
@@ -500,25 +500,40 @@ require(['jquery','angular'],
     }
 
     function setNewLocation(url, hash) {
-      if (url) {
-        _base = url.substring(0, url.lastIndexOf('/'));
-        _location = url;
-        _hash = hash;
-      } else {
-        _location = null;
-        _base = null;
-        _hash = null;
-      }      
+      if (url != _location || hash != _hash) {
+        if (url) {
+          _base = url.substring(0, url.lastIndexOf('/'));
+          _location = url;
+         _hash = hash;
+        } else {
+          _location = null;
+          _base = null;
+          _hash = null;
+        }
+        updateBrowserLocation();
+      }
     }
-
+    
+    function updateBrowserLocation() {
+      if (_location) {
+        if (_hash) {
+          $location.search('url', _location + '#' + _hash);
+        } else {
+          $location.search('url', _location);
+        }
+      } else {
+        $location.search('url', null);
+      }
+    }
+    
     function setLocation(value) {
-      if (!value || value == '') {
+      if (!value || value == '' || typeof value !== "string") {
         setNewLocation(null)
         return;
-      } 
+      }
 
       var pval = value.split('#'),
-          url = pval[0], hash = decodeURIComponent(pval[1]);
+          url = pval[0], hash = pval[1] ? decodeURIComponent(pval[1]) : null;
 
       if (isURLAbsolute(url)) {
         if (isXWikiURL(url)) {
@@ -543,20 +558,21 @@ require(['jquery','angular'],
 
         if (_location == url) {
           // set new hash only
-          scrollToHash(hash);
           _hash = hash;
+          updateBrowserLocation();
+          scrollToHash(hash);
         } else {
           // set new URL location based on relative URL
           setNewLocation(url, hash);
         }
-      }    
+      }
     }
 
     return {
 
       /**
        * URL of the currently selected javadoc
-       * 
+       *
        * @param value The URL to be selected. If the URL is relative, it will be
        *              canonalized based on the previously selected URL. If an
        *              anchor is provided, it will be stripped out and store in
@@ -584,7 +600,7 @@ require(['jquery','angular'],
           scrollToHash(_hash);
         }
 
-        // Hook links 
+        // Hook links
         _element.find('a').on('click', function(event) {
           event.preventDefault();
           scope.$apply(setLocation($(event.delegateTarget).attr('href')));
@@ -596,14 +612,18 @@ require(['jquery','angular'],
   /**
    * Scriptdoc application
    */
-  var app = angular.module('scriptdoc', 
+  var app = angular.module('scriptdoc',
                            ['scriptdoc.xwikiServices', 'scriptdoc.services']);
+
+  app.config(['$locationProvider', function($locationProvider) {
+    $locationProvider.html5Mode({enabled: true, requireBase: false, rewriteLinks: false}).hashPrefix('!');
+  }]);
 
   /**
    * List controller
    */
-  app.controller('ListCtrl', 
-                 ['$scope', '$http', 'xwikiService', 'filterService', 'javadocService', 
+  app.controller('ListCtrl',
+                 ['$scope', '$http', 'xwikiService', 'filterService', 'javadocService',
                   function($scope, $http, xwikiService, filterService, javadocService) {
     $scope.filterService = filterService;
     $http.get(xwikiService.getBindingsURL)
@@ -623,10 +643,10 @@ require(['jquery','angular'],
   /**
    * Filter controller
    */
-  app.controller('FilterCtrl', 
-                 ['$scope', '$http', 'xwikiService', 'filterService', 
+  app.controller('FilterCtrl',
+                 ['$scope', '$http', 'xwikiService', 'filterService',
                   function($scope, $http, xwikiService, filterService) {
-    // Provides bindings to the filter service                
+    // Provides bindings to the filter service
     $scope.filterService = filterService;
 
     // Dynamically fill the list of kinds
@@ -639,15 +659,15 @@ require(['jquery','angular'],
   /**
    * Javascript controller
    */
-  app.controller('JavadocCtrl', 
-                 ['$scope', '$http', 'javadocService', 
+  app.controller('JavadocCtrl',
+                 ['$scope', '$http', 'javadocService',
                   function($scope, $http, javadocService) {
 
     // Provides bindings to the javadoc service
     $scope.javadocService = javadocService;
   }]);
 
-  app.directive('javadocDisplayer', 
+  app.directive('javadocDisplayer',
                 ['$compile', 'javadocService',
                  function($compile, javadocService){
     return {
@@ -680,6 +700,12 @@ require(['jquery','angular'],
       }
     };
   });
+  
+  app.run(['javadocService', '$rootScope', '$location', function(javadocService, $rootScope, $location) {
+    $rootScope.$on('$locationChangeSuccess', function(event) {
+      javadocService.location($location.search().url);
+    });
+  }]);
 
   /**
    * Application bootstrapper

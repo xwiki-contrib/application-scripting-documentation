@@ -504,7 +504,7 @@ require(['jquery','angular'],
         if (url) {
           _base = url.substring(0, url.lastIndexOf('/'));
           _location = url;
-         _hash = hash;
+          _hash = hash;
         } else {
           _location = null;
           _base = null;
@@ -595,10 +595,8 @@ require(['jquery','angular'],
       postLoadHook : function(scope, element) {
         _element = element.next();
 
-        if (_hash) {
-          // Scroll to current hash
-          scrollToHash(_hash);
-        }
+        // Scroll to current hash
+        scrollToHash(_hash);
 
         // Hook links
         _element.find('a').on('click', function(event) {

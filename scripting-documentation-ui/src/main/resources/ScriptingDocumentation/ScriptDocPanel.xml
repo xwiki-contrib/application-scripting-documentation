@@ -12,8 +12,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421597575000</creationDate>
-  <date>1425893863000</date>
-  <contentUpdateDate>1425642453000</contentUpdateDate>
+  <date>1426003607000</date>
+  <contentUpdateDate>1425897233000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <defaultTemplate/>
@@ -145,7 +145,7 @@ $xwiki.jsx.use('ScriptingDocumentation.ScriptDocPanel', {'minify': false})
 
 &lt;div id='scriptDocBindingsList' ng-controller="ListCtrl"&gt;
   &lt;ul class="list-unstyled"&gt;
-    &lt;li ng-repeat="binding in bindings | filter:filterService.activeFilters | filter:filterService.searchText | orderBy:'name'" ng-popover title="{{binding.kind=='velocity' || binding.kind=='template' ? '$' : ''}}{{::binding.name}}" data-content="{{::binding.description}}" data-placement="left" ng-click="goto($event, binding.doclink)" ng-class="{'isLink':binding.doclink}"&gt;&lt;span ng-if="binding.internal||binding.deprecated||binding.legacy" ng-class="{'label':true, 'label-primary':binding.internal, 'label-warning':binding.deprecated, 'label-danger':binding.legacy}" ng-bind="::getBindingStateLetter(binding)"&gt;&lt;/span&gt;&lt;span ng-class="{'dollar':true, 'optional':binding.kind!='velocity' &amp;&amp; binding.kind!='template'}" ng-bind-template="$"&gt;&lt;/span&gt;&lt;span ng-bind="::binding.name"&gt;&lt;/span&gt;&lt;/li&gt;
+    &lt;li ng-repeat="binding in bindings | filter:filterService.activeFilters | filter:filterService.searchText | orderBy:'name'" ng-popover title="{{binding.kind=='velocity' || binding.kind=='template' ? '$' : ''}}{{::binding.name}}" data-content="{{::binding.description}}" data-placement="left" ng-click="goto($event, binding.doclink)" ng-class="{'isLink':binding.doclink}"&gt;&lt;span ng-if="binding.internal||binding.deprecated||binding.legacy" ng-class="{'label':true, 'label-primary':binding.internal, 'label-warning':binding.deprecated, 'label-danger':binding.legacy}" ng-bind="::getBindingStateLetter(binding)"&gt;&lt;/span&gt;&lt;span ng-class="{'dollar':true, 'optional':binding.kind!='velocity' &amp;&amp; binding.kind!='template'}" ng-bind-template="$"&gt;&lt;/span&gt;&lt;span ng-bind="::binding.name" ng-class="{'externallink':(binding.doclink &amp;&amp; isExternalUrl(binding.doclink))}"&gt;&lt;/span&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/div&gt;
 {{/html}}
@@ -513,7 +513,7 @@ require(['jquery','angular'],
         updateBrowserLocation();
       }
     }
-    
+
     function updateBrowserLocation() {
       if (_location) {
         if (_hash) {
@@ -525,7 +525,7 @@ require(['jquery','angular'],
         $location.search('url', null);
       }
     }
-    
+
     function setLocation(value) {
       if (!value || value == '' || typeof value !== "string") {
         setNewLocation(null)
@@ -603,6 +603,10 @@ require(['jquery','angular'],
           event.preventDefault();
           scope.$apply(setLocation($(event.delegateTarget).attr('href')));
         });
+      },
+      
+      isExternalUrl: function(url) {
+        return isURLAbsolute(url) &amp;&amp; !isXWikiURL(url);
       }
     };
   }]);
@@ -624,6 +628,7 @@ require(['jquery','angular'],
                  ['$scope', '$http', 'xwikiService', 'filterService', 'javadocService',
                   function($scope, $http, xwikiService, filterService, javadocService) {
     $scope.filterService = filterService;
+    $scope.isExternalUrl = javadocService.isExternalUrl;
     $http.get(xwikiService.getBindingsURL)
       .success(function(data) {
         $scope.bindings = data;
@@ -698,7 +703,7 @@ require(['jquery','angular'],
       }
     };
   });
-  
+
   app.run(['javadocService', '$rootScope', '$location', function(javadocService, $rootScope, $location) {
     $rootScope.$on('$locationChangeSuccess', function(event) {
       javadocService.location($location.search().url);
@@ -842,6 +847,11 @@ require(['jquery','angular'],
   cursor: not-allowed;
 }
 
+#scriptDocBindingsList .externallink {
+    background: url($xwiki.getSkinFile('icons/xwiki/external-link.png')) no-repeat scroll right center transparent;
+    padding-right: 12px;
+}
+
 #scriptDocBindingsList li.isLink  {
   cursor: pointer;
 }
@@ -875,7 +885,7 @@ require(['jquery','angular'],
       <name/>
     </property>
     <property>
-      <parse>0</parse>
+      <parse>1</parse>
     </property>
     <property>
       <use>onDemand</use>

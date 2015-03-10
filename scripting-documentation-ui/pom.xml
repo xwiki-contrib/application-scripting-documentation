@@ -31,7 +31,7 @@
   <artifactId>scripting-documentation-ui</artifactId>
   <name>Scripting Documentation - UI</name>
   <packaging>xar</packaging>
-  <description>Provides documentation for scripting</description>
+  <description>Provides integrated documentation of all available scripting API (including locally installed extentions) directly in your running wiki instance. You may also browse the general API using this same application at http://platform.xwiki.org/xwiki/bin/view/ScriptingDocumentation/</description>
   <properties>
     <!-- Don't run CLIRR here since there's no Java code. -->
     <xwiki.clirr.skip>true</xwiki.clirr.skip>

@@ -12,7 +12,7 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421597575000</creationDate>
-  <date>1426003607000</date>
+  <date>1426020417000</date>
   <contentUpdateDate>1425897233000</contentUpdateDate>
   <version>1.1</version>
   <title/>
@@ -491,12 +491,14 @@ require(['jquery','angular'],
     function scrollToHash(hash) {
       var anchor = (hash) ? $('*[name="' + hash + '"]')[0] : null,
           target = (hash &amp;&amp; anchor) ? $(anchor).offset().top : _element.offset().top,
-          distance = Math.abs(target - $(document).scrollTop()),
-          speed = Math.sqrt(distance) * 5;
-
-      $('html,body').animate({
-        scrollTop: target
-      }, speed);
+          distance = target - $(document).scrollTop(),
+          speed = Math.sqrt(Math.abs(distance)) * 5;
+          
+      if ((hash &amp;&amp; anchor) || distance &lt; 0) { // No scroll down to top
+        $('html,body').animate({
+          scrollTop: target
+        }, speed);
+      }
     }
 
     function setNewLocation(url, hash) {

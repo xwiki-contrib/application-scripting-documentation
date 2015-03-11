@@ -12,10 +12,10 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421958504000</creationDate>
-  <date>1426019897000</date>
-  <contentUpdateDate>1426019288000</contentUpdateDate>
+  <date>1426071038000</date>
+  <contentUpdateDate>1426071038000</contentUpdateDate>
   <version>1.1</version>
-  <title>Scripting Documentation</title>
+  <title>XWiki Scripting API Reference</title>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
@@ -625,7 +625,44 @@ icon=icon:book</parameters>
       #set($ok = $response.getOutputStream().write($docContent.substring($docContentStart, $docContentEnd).getBytes()))
     #end
   #else
-&lt;div class="box infomessage"&gt;Select a script binding on your right to get more detailed information.&lt;/div&gt;
+(% class="container-fluid" style="font-size:120%" %)(((
+(% class="row" %)(((
+)))(% class="row" %)(((
+(% class="col-sm-6" %)(((
+{{warning}}On very first load, the right panel could take time to load while the bindings caches are being filled.{{/warning}}
+)))(% class="col-sm-6" %)(((
+{{info}}Select a script binding on your right to get more detailed information about it.{{/info}}
+))))))
+(% class="row" %)(((
+The XWiki Scripting API allows script developers to access the XWiki API Java methods that the XWiki development team consider safe for you to use (i.e. for which backward compatibility is guaranteed). The XWiki Scripting API is directly accessible from your wiki pages using any supported scripting language like Velocity, Groovy, Javascript, Python, Ruby,...
+
+This documentation is dynamically generated based on the available bindings provided to the running wiki instance, and includes bindings provided by installed extensions. On your right, you have a categorized and searchable list of currently available bindings. Bindings are available in most languages just by their name, but for velocity, the name need to be prefixed by a dollar ($) sign. Some bindings are only available to velocity. When listed, their dollar sign is shown hard black.
+
+= Bindings categories
+
+; $services.localization.render('scriptdoc.kinds.template')
+: These are just velocity variables initialized in velocity templates used to render the current page. Some of them are very internal, but many are considered API since they provide useful shortcuts and fast access to frequently used information. These are obviously only accessible from velocity scripts.
+
+; $services.localization.render('scriptdoc.kinds.velocity')
+: These ones are mostly convenience tools provided to the velocity scripts to allow advanced manipulation of Java types. These are only accessible to velocity scripts. Other languages does not require those tools or can usually directly access them without these bindings.
+
+; $services.localization.render('scriptdoc.kinds.script')
+: These are mostly contextual bindings for the current request. They provide access to the current request and response, as well as to the current document being rendered, and the overall context of the request like the current user, etc... They also provide access to the initial core API and some legacy services. These bindings are provided to all script languages.
+
+; $services.localization.render('scriptdoc.kinds.service')
+: These are bindings provided to scripts by the XWiki modules. They all have the **\$services** binding as a common entry-point and the list of available services is extensible. This is the new modular way used in XWiki to provide services to scripts. These bindings are provided to all script languages.
+
+; $services.localization.render('scriptdoc.kinds.plugin')
+: These bindings was the old way to provide script services. Like them, they have a common entry point below the **\$xwiki** bindings. While some of them are still very useful, their usage are discouraged, and these services are progressively migrated to the new script services.
+
+= Deprecated, legacy, internal, and unstable bindings
+
+The deprecated (% class="label label-warning" %)D(% %), deprecated/legacy (% class="label label-danger" %)D(% %) and internal (% class="label label-primary" %)I(% %) bindings are not displayed by default, and you usually does not need them. But you should always pay attention to the **@Unstable** annotation. When you see code marked with this annotation it means it's a new public API that is still considered unstable and that can change at any time too.
+
+The deprecated bindings have been replaced by new methods and their usage are discouraged. When also marked legacy, the support of this feature has been moved to legacy packages, that are installed by default, but that could be replaced by non-legacy package to fully remove the feature.
+
+While documented, the internal bindings are very dangerous to be used. The backward compatibility is not guaranteed over time, even between minor versions. Some of the bindings do not have any meaning or stability at all.
+))))))
   #end
 #else
 $xwiki.ssx.use($doc)

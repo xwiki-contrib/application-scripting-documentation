@@ -401,26 +401,7 @@ Table styles
     padding-right:3px;
 }
 #javadocdiv .overviewSummary caption, #javadocdiv .packageSummary caption, #javadocdiv .contentContainer ul.blockList li.blockList caption, #javadocdiv .summary caption, .classUseContainer caption, #javadocdiv .constantValuesContainer caption {
-    position:relative;
-    text-align:left;
-    background-repeat:no-repeat;
-    color:#FFFFFF;
-    font-weight:bold;
-    clear:none;
-    overflow:hidden;
-    padding:0px;
-    margin:0px;
-}
-#javadocdiv caption a:link, caption a:hover, #javadocdiv caption a:active, caption a:visited {
-    color:#FFFFFF;
-}
-#javadocdiv .overviewSummary caption span, #javadocdiv .packageSummary caption span, #javadocdiv .contentContainer ul.blockList li.blockList caption span, #javadocdiv .summary caption span, #javadocdiv .classUseContainer caption span, #javadocdiv .constantValuesContainer caption span {
-    white-space:nowrap;
-    padding-top:8px;
-    padding-left:8px;
-    display:block;
-    float:left;
-    height:18px;
+    display:none;
 }
 #javadocdiv .overviewSummary .tabEnd, #javadocdiv .packageSummary .tabEnd, #javadocdiv .contentContainer ul.blockList li.blockList .tabEnd, #javadocdiv .summary .tabEnd, .classUseContainer .tabEnd, #javadocdiv .constantValuesContainer .tabEnd {
     width:10px;

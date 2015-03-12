@@ -966,7 +966,7 @@ require(['jquery','angular','angular-loading-bar'],
     #set ($bindingsFinder = $services.scriptdoc.getBindingsFinder())
     [
       #foreach($binding in $bindingsFinder.find())
-        #set($klass = $binding.type.name)
+        #set($klass = $binding.type.getName())
         #set($ki = $klass.lastIndexOf('.') + 1)
         #if ($velocityCount != 1),
         #end

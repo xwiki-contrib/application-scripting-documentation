@@ -718,7 +718,9 @@ require(['jquery','angular','angular-loading-bar'],
 
   app.run(['javadocService', '$rootScope', '$location', function(javadocService, $rootScope, $location) {
     $rootScope.$on('$locationChangeSuccess', function(event) {
-      javadocService.location($location.search().url);
+      var url = $location.search().url;
+      url = (url) ? url : null; // avoid setter to act as getter since url could be undefined
+      javadocService.location(url);
     });
     $(document).ready( function() {
       var container = $('#contentcontainerinner'),

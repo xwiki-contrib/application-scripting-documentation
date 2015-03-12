@@ -12,8 +12,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421597575000</creationDate>
-  <date>1426061517000</date>
-  <contentUpdateDate>1425897233000</contentUpdateDate>
+  <date>1426173268000</date>
+  <contentUpdateDate>1426157066000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <defaultTemplate/>
@@ -560,22 +560,24 @@ require(['jquery','angular','angular-loading-bar'],
           // external (non-xwiki) URL are open in a new window
           window.open(value);
         }
-      } else {
+      } else if (_base) {
         if (url.startsWith('/')) {
           url = getHost(_base) + url;
         } else {
           url = reduceURL(_base + '/' + url);
         }
-
+        
         if (_location == url) {
           // set new hash only
           _hash = hash;
-          updateBrowserLocation();
           scrollToHash(hash);
+          updateBrowserLocation();
         } else {
           // set new URL location based on relative URL
           setNewLocation(url, hash);
         }
+      } else {
+        setNewLocation(null);
       }
     }
 
@@ -604,7 +606,7 @@ require(['jquery','angular','angular-loading-bar'],
       },
 
       postLoadHook : function(scope, element) {
-        _element = element.next();
+        _element = element;
 
         // Scroll to current hash
         scrollToHash(_hash);
@@ -686,15 +688,25 @@ require(['jquery','angular','angular-loading-bar'],
                 ['$compile', 'javadocService',
                  function($compile, javadocService){
     return {
-      replace : true,
-      scope : false,
       restrict: 'A',
+      scope : false,
+      transclude:true,
+      template: "&lt;div id='javadocdiv' ng-include='javadocService.location()'&gt;&lt;/div&gt;&lt;div ng-transclude/&gt;",
       link: function($scope, $element, $attrs){
+        var el = $element;
+        el.removeAttr('style');
         $scope.javadocService = javadocService;
-        var div = $compile(angular.element("&lt;div id='javadocdiv' ng-include='javadocService.location()'&gt;&lt;/div&gt;"))($scope);
-        $element.replaceWith(div);
         $scope.$on('$includeContentLoaded', function() {
-          javadocService.postLoadHook($scope, div);
+          var div = el.children('#javadocdiv');
+          $scope.loadFailed = false;
+          $scope.notFound = !div.html();
+          if (!$scope.notFound) {
+            javadocService.postLoadHook($scope, div);
+          }
+        });
+        $scope.$on('includeContentError', function() {
+          $scope.notFound = false;
+          $scope.loadFailed = true;
         });
       }
     };

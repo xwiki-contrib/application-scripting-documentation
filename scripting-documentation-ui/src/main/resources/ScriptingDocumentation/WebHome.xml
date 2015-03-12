@@ -12,8 +12,8 @@
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421958504000</creationDate>
-  <date>1426071038000</date>
-  <contentUpdateDate>1426071038000</contentUpdateDate>
+  <date>1426173806000</date>
+  <contentUpdateDate>1426173806000</contentUpdateDate>
   <version>1.1</version>
   <title>XWiki Scripting API Reference</title>
   <defaultTemplate/>
@@ -607,7 +607,7 @@ icon=icon:book</parameters>
   </object>
   <content>{{velocity}}
 #if ($xcontext.action == 'get')
-  #if ($request.url &amp;&amp; $request.url != '')
+  #if ($request.url &amp;&amp; $request.url != '' &amp;&amp; $regextool.compile('^https?://[^/]*\.xwiki\.org/.*').matcher($request.url.toLowerCase()).matches())
     #set($docContent = $xwiki.getURLContent($request.url))
     #set($docContentStart = 
            $docContent.indexOf('&lt;!-- ======== START OF CLASS DATA ======== --&gt;'))
@@ -666,8 +666,25 @@ While documented, the internal bindings are very dangerous to be used. The backw
   #end
 #else
 $xwiki.ssx.use($doc)
-{{html}}
-&lt;div javadoc-displayer&gt;&lt;/div&gt;
+{{html wiki="true"}}
+&lt;div javadoc-displayer style="display:none;"&gt;
+&lt;div ng-show='loadFailed'&gt;
+
+{{error}}
+**Unable to load the requested documentation**
+You are suffering from a network failure or the documentation server is experiencing some high load or an unexpected interruption of service.
+{{/error}}
+
+&lt;/div&gt;
+&lt;div ng-show='notFound'&gt;
+
+{{warning}}
+**Documentation not found**
+The requested documentation could not be found on the documentation server.
+{{/warning}}
+
+&lt;/div&gt;
+&lt;/div&gt;
 {{/html}}
 #end
 {{/velocity}}</content>

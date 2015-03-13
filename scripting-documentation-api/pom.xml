@@ -24,7 +24,7 @@
   <parent>
     <artifactId>scripting-documentation</artifactId>
     <groupId>org.xwiki.contrib.scriptingdocumentation</groupId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
   </parent>
   <artifactId>scripting-documentation-api</artifactId>
   <name>Scriptint Documentation - API</name>

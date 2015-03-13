@@ -14,4 +14,6 @@ couple of changes that are not easier to cope with.
 However, it has already a special handling for SNAPSHOT version (for which javadoc is not generated) to point to the
 latest release preceding that SNAPSHOT version.
 
-This is a work in progress, the actual API is quite complete, but the UI is basic.
+The UI is based on an AngularJS application and provide access to a part of the information provided by the API. The
+documentation is displayed integrated into the XWiki page without using iFrames and support the browser navigation
+buttons (back/forward).

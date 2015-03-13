@@ -58,7 +58,8 @@ public class ScriptingDocumentationScriptService implements ScriptService
     /**
      * @return a list of available kinds of bindings finders.
      */
-    public Collection<BindingKind> getAvailableBindingKinds() {
+    public Collection<BindingKind> getAvailableBindingKinds()
+    {
         Set<String> kinds = getBindingsFinderKinds();
         Collection<BindingKind> result = new ArrayList<BindingKind>(kinds.size());
         for (String kind : kinds) {
@@ -73,7 +74,8 @@ public class ScriptingDocumentationScriptService implements ScriptService
      * @param kind the kind.
      * @return a binding kind corresponding to kind.
      */
-    public BindingKind getBindingKind(String kind) {
+    public BindingKind getBindingKind(String kind)
+    {
         return new BindingKind(kind);
     }
 

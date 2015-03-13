@@ -231,10 +231,9 @@ public class ExtensionBindingResource extends AbstractBindingResource
 
         if (version != null) {
             version = getLastReleasedVersion();
+            moduleDocLink =
+                UrlChecker.getRedirectURL("http://extensions.xwiki.org/xwiki/bin/view/Main/WebHome?id=" + getId());
         }
-
-        moduleDocLink =
-            UrlChecker.getRedirectURL("http://extensions.xwiki.org/xwiki/bin/view/Main/WebHome?id=" + getId());
     }
 
     private String getLastReleasedVersion()

@@ -39,7 +39,7 @@
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/application-scripting-documentation.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/application-scripting-documentation.git</developerConnection>
-    <url>https://github.com/xwiki-contrib/application-scripting-documentation</url>
+    <url>https://github.com/xwiki-contrib/application-scripting-documentation/tree/master</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement />

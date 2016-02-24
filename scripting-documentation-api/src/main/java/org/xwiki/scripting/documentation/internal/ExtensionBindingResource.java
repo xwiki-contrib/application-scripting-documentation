@@ -283,9 +283,10 @@ public class ExtensionBindingResource extends AbstractBindingResource
         String groupId = null;
         String artifactId = null;
         String version = null;
+        BufferedReader reader = null;
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
             String line = reader.readLine();
             while (line != null && (groupId == null || artifactId == null || version == null)) {
                 if (line.startsWith("groupId=")) {
@@ -297,9 +298,14 @@ public class ExtensionBindingResource extends AbstractBindingResource
                 }
                 line = reader.readLine();
             }
-            reader.close();
         } catch (Exception e) {
             // Ignored
+        } finally {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                // ignored
+            }
         }
 
         return new MavenCoord(groupId, artifactId, version);

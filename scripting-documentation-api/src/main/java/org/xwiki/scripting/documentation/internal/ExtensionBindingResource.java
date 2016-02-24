@@ -22,13 +22,19 @@ package org.xwiki.scripting.documentation.internal;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
 import java.util.Set;
+import java.util.jar.JarFile;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+import org.reflections.vfs.Vfs;
+import org.reflections.vfs.ZipDir;
 import org.xwiki.extension.ResolveException;
 import org.xwiki.extension.repository.ExtensionRepositoryManager;
 import org.xwiki.extension.repository.result.IterableResult;
@@ -36,6 +42,7 @@ import org.xwiki.extension.version.Version;
 import org.xwiki.extension.version.internal.DefaultVersion;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 
 /**
  * XWiki Extensions binding resource.
@@ -45,6 +52,57 @@ import com.google.common.base.Predicates;
 public class ExtensionBindingResource extends AbstractBindingResource
 {
     private static final String JAVADOC_JAR = "-javadoc.jar";
+
+    /**
+     * A modified version of the Vfs ZipDir implementation of the Reflection API that prevent file closing.
+     * See {@link JarUrlType}
+     */
+    private static final class CachedJarZipDir extends ZipDir
+    {
+        CachedJarZipDir(JarFile jarFile)
+        {
+            super(jarFile);
+        }
+
+        @Override
+        public void close()
+        {
+            // do not close cached JarFile resources
+        }
+    }
+
+    /**
+     * This is a fix to the default JarUrlType provided by the Reflection API.
+     * Since version 0.9.10, the scanner properly close resources, which is an improvement. However since
+     * URL resources could be cached, and that JarUrlConnection proceed to caching by keeping the JarFile open,
+     * closing them cause IllegalStateException error during next access to the same resource.
+     * This fixed version use a {@link CachedJarZipDir} wrapper of {@link ZipDir} that prevent closing when the
+     * UrlConnection is using caches.
+     */
+    private static final class JarUrlType implements Vfs.UrlType
+    {
+        public boolean matches(URL url) {
+            return "jar".equals(url.getProtocol());
+        }
+
+        public Vfs.Dir createDir(URL url) throws Exception {
+            try {
+                URLConnection urlConnection = url.openConnection();
+                if (urlConnection instanceof JarURLConnection) {
+                    if (urlConnection.getUseCaches()) {
+                        return new CachedJarZipDir(((JarURLConnection) urlConnection).getJarFile());
+                    } else {
+                        return new ZipDir(((JarURLConnection) urlConnection).getJarFile());
+                    }
+                }
+            } catch (Throwable e) {
+                // in case of failure, let the original handler proceed
+            }
+            return null;
+        }
+    }
+
+    private static final Vfs.UrlType JAR_URL_TYPE_FIXED = new JarUrlType();
 
     private final ExtensionRepositoryManager extensionRepositoryManager;
 
@@ -274,7 +332,18 @@ public class ExtensionBindingResource extends AbstractBindingResource
         configurationBuilder.setUrls(url);
         configurationBuilder.filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix("META-INF.maven")));
 
+        // Backup the active url types handling
+        List<Vfs.UrlType> urlTypes = Vfs.getDefaultUrlTypes();
+
+        // Set default url types handling, patching the jar url type to prevent excessive closing of cached jar files
+        Vfs.setDefaultURLTypes(Lists.<Vfs.UrlType>newArrayList(Vfs.DefaultUrlTypes.values()));
+        Vfs.addDefaultURLTypes(JAR_URL_TYPE_FIXED);
+
         Reflections reflections = new Reflections(configurationBuilder);
+
+        // Restore the previously active url type handling
+        Vfs.setDefaultURLTypes(urlTypes);
+
         return reflections.getResources(Predicates.equalTo("pom.properties"));
     }
 

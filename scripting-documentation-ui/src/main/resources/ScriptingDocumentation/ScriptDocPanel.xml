@@ -457,7 +457,7 @@ require(['jquery','angular','angular-loading-bar'],
         hostUrlRE = /^(https?:\/\/[^/]+)/i
         xwikiUrlRE = /^https?:\/\/[^/]*\.xwiki\.org/i,
         parentRE = /[\-\w]+\/\.\.\//
-        extensionUrlRE = /^https?:\/\/extensions\.xwiki\.org\/\?id=([^:]+):([^:]+)(?::([^:]+))?:::.+\/apidocs(\/[^?]+)\?is-external=true$/;
+        extensionUrlRE = /^https?:\/\/extensions\.xwiki\.org\/?\?id=([^:]+):([^:]+)(?::([^:]+))?:::.+\/apidocs(\/[^?]+)\?is-external=true$/;
 
     function isURLAbsolute(url) {
       return absUrlRE.test(url);
@@ -479,21 +479,21 @@ require(['jquery','angular','angular-loading-bar'],
     function parseExtensionURL(url) {
       var r = url.match(extensionUrlRE);
       if(!r) return null;
-      if(!r[2]) {
+      if(!r[3]) {
           // TODO: find version
       }
       return {
-          groupId: r[0],
-          artifactId: r[1],
-          version: r[2],
-          jdocPath: r[3]
+          groupId: r[1],
+          artifactId: r[2],
+          version: r[3],
+          jdocPath: r[4]
       }
     }
 
     function buildJavadocURL(parsedUrl) {
-      return 'http://nexus.xwiki.org/nexus/service/local/repositories/releases/archive/'
-        + parsedUrl.groupId + '/' + parsedUrl.artifactId + '/' + parsedUrl.version + '/'
-        + parsedUrl.artifactId + '-' + parsedUrl.version + '-javadoc.jar/!/'
+      return 'http://nexus.xwiki.org/nexus/service/local/repositories/public/archive/'
+        + parsedUrl.groupId.replace(/\./g,'/') + '/' + parsedUrl.artifactId + '/' + parsedUrl.version + '/'
+        + parsedUrl.artifactId + '-' + parsedUrl.version + '-javadoc.jar/!'
         + parsedUrl.jdocPath;
     }
 

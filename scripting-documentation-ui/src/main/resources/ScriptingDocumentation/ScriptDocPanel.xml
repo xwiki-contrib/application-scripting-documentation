@@ -606,16 +606,15 @@ require(['jquery','angular','angular-loading-bar'],
       },
 
       postLoadHook : function(scope, element) {
-        _element = element;
-
-        // Scroll to current hash
         scrollToHash(_hash);
+      },
 
-        // Hook links
-        _element.find('a').on('click', function(event) {
+      handleClick : function(event) {
+        var target = $(event.target).attr('href');
+        if (target) {
           event.preventDefault();
-          scope.$apply(setLocation($(event.delegateTarget).attr('href')));
-        });
+          setLocation(target);
+        }
       },
 
       isExternalUrl: function(url) {
@@ -691,7 +690,7 @@ require(['jquery','angular','angular-loading-bar'],
       restrict: 'A',
       scope : false,
       transclude:true,
-      template: "&lt;div id='javadocdiv' ng-include='javadocService.location()'&gt;&lt;/div&gt;&lt;div ng-transclude/&gt;",
+      template: "&lt;div id='javadocdiv' ng-include='javadocService.location()' ng-click='javadocService.handleClick($event)'&gt;&lt;/div&gt;&lt;div ng-transclude/&gt;",
       link: function($scope, $element, $attrs){
         var el = $element;
         el.removeAttr('style');
@@ -701,7 +700,7 @@ require(['jquery','angular','angular-loading-bar'],
           $scope.loadFailed = false;
           $scope.notFound = !div.html();
           if (!$scope.notFound) {
-            javadocService.postLoadHook($scope, div);
+            javadocService.postLoadHook();
           }
         });
         $scope.$on('includeContentError', function() {

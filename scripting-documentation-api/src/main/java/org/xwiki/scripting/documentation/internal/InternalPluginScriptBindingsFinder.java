@@ -39,7 +39,7 @@ import com.xpn.xwiki.plugin.XWikiPluginInterface;
 public class InternalPluginScriptBindingsFinder extends AbstractPluginScriptBindingsFinder
 {
     @Override
-    protected Class<?> getPluginClass(XWikiPluginInterface plugin)
+    protected Class< ? > getPluginClass(XWikiPluginInterface plugin)
     {
         if (plugin != null) {
             return plugin.getClass();
@@ -48,7 +48,7 @@ public class InternalPluginScriptBindingsFinder extends AbstractPluginScriptBind
     }
 
     @Override
-    protected boolean isInternal(Class<?> klass)
+    protected boolean isInternal(Class< ? > klass)
     {
         return true;
     }

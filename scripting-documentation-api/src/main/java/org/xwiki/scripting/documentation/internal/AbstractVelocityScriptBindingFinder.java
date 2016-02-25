@@ -55,7 +55,7 @@ public abstract class AbstractVelocityScriptBindingFinder extends AbstractScript
         return null;
     }
 
-    protected void addAllBinding(VelocityContext vcontext, Map<String, Class<?>> bindings)
+    protected void addAllBinding(VelocityContext vcontext, Map<String, Class< ? >> bindings)
     {
         for (Object key : vcontext.getKeys()) {
             String name = key.toString();

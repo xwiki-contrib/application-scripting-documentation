@@ -51,11 +51,11 @@ public class ScriptScriptBindingsFinder extends AbstractScriptBindingsFinder
     /**
      * @return the map of classes bindings in the engine scope of the script context.
      */
-    protected Map<String, Class<?>> getBindings()
+    protected Map<String, Class< ? >> getBindings()
     {
         ScriptContext scriptContext = this.scriptContextManager.getScriptContext();
 
-        Map<String, Class<?>> bindings = new HashMap<String, Class<?>>();
+        Map<String, Class< ? >> bindings = new HashMap<String, Class<?>>();
         if (scriptContext != null) {
             for (Map.Entry<String, Object> entry : scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).entrySet()) {
                 bindings.put(entry.getKey(), entry.getValue().getClass());

@@ -40,7 +40,7 @@ import com.xpn.xwiki.plugin.XWikiPluginInterface;
 public class PluginScriptBindingsFinder extends AbstractPluginScriptBindingsFinder
 {
     @Override
-    protected Class<?> getPluginClass(XWikiPluginInterface plugin)
+    protected Class< ? > getPluginClass(XWikiPluginInterface plugin)
     {
         if (plugin != null) {
             Api pluginApi = plugin.getPluginApi(plugin, contextProvider.get());

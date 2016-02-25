@@ -76,7 +76,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     @Inject
     private LocalizationManager localization;
 
-    protected abstract Map<String, Class<?>> getBindings();
+    protected abstract Map<String, Class< ? >> getBindings();
 
     protected abstract String getFullName(String name);
 
@@ -86,10 +86,10 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     public List<Binding> find()
     {
         List<Binding> bindings = new ArrayList<Binding>();
-        for (Map.Entry<String, Class<?>> entry : getBindings().entrySet()) {
+        for (Map.Entry<String, Class< ? >> entry : getBindings().entrySet()) {
             String name = entry.getKey();
             String fullName = getFullName(name);
-            Class<?> klass = entry.getValue();
+            Class< ? > klass = entry.getValue();
 
             Binding binding = bindingCache.get(name, klass, getType());
             if (binding == null) {
@@ -114,7 +114,7 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     @Override
     public Binding find(String name)
     {
-        Class<?> klass = getBindings().get(name);
+        Class< ? > klass = getBindings().get(name);
 
         if (klass == null) {
             return null;
@@ -142,12 +142,12 @@ public abstract class AbstractScriptBindingsFinder implements ScriptBindingsFind
     public List<Binding> find(Pattern regex)
     {
         List<Binding> bindings = new ArrayList<Binding>();
-        for (Map.Entry<String, Class<?>> entry : getBindings().entrySet()) {
+        for (Map.Entry<String, Class< ? >> entry : getBindings().entrySet()) {
             String name = entry.getKey();
 
             if (regex.matcher(name).matches()) {
                 String fullName = getFullName(name);
-                Class<?> klass = entry.getValue();
+                Class< ? > klass = entry.getValue();
 
                 Binding binding = bindingCache.get(name, klass, getType());
                 if (binding == null) {

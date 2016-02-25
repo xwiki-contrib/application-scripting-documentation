@@ -59,9 +59,9 @@ public abstract class AbstractBinding implements Binding
     /**
      * @return the class of this binding.
      */
-    public Class<?> getBindingClass()
+    public Class< ? > getBindingClass()
     {
-        return (type instanceof Class<?>) ? (Class<?>) type : null;
+        return (type instanceof Class< ? >) ? (Class< ? >) type : null;
     }
 
     /**

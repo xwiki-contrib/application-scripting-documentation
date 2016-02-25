@@ -59,12 +59,12 @@ public class TemplateScriptBindingsFinder extends AbstractVelocityScriptBindingF
     /**
      * @return the map of classes bindings in all velocity contexts
      */
-    protected Map<String, Class<?>> getBindings()
+    protected Map<String, Class< ? >> getBindings()
     {
         VelocityContext templateContext = this.velocityManager.getVelocityContext();
         ScriptContext scriptContext = this.scriptContextManager.getScriptContext();
         VelocityContext vContext = getVelocityContext();
-        Map<String, Class<?>> scriptBindings = new HashMap<String, Class<?>>();
+        Map<String, Class< ? >> scriptBindings = new HashMap<String, Class<?>>();
 
         if (scriptContext != null) {
             for (Map.Entry<String, Object> entry : scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).entrySet()) {
@@ -79,7 +79,7 @@ public class TemplateScriptBindingsFinder extends AbstractVelocityScriptBindingF
             }
         }
 
-        Map<String, Class<?>> bindings = new HashMap<String, Class<?>>();
+        Map<String, Class< ? >> bindings = new HashMap<String, Class<?>>();
         while (templateContext != null) {
             addAllBinding(templateContext, scriptBindings, bindings);
             templateContext = (VelocityContext) templateContext.getChainedContext();
@@ -100,13 +100,13 @@ public class TemplateScriptBindingsFinder extends AbstractVelocityScriptBindingF
         return BindingKind.TEMPLATE;
     }
 
-    private static void addAllBinding(VelocityContext vcontext, Map<String, Class<?>> scriptBindings,
-        Map<String, Class<?>> bindings)
+    private static void addAllBinding(VelocityContext vcontext, Map<String, Class< ? >> scriptBindings,
+        Map<String, Class< ? >> bindings)
     {
         for (Object key : vcontext.getKeys()) {
             String name = key.toString();
-            Class<?> klass = vcontext.get(name).getClass();
-            Class<?> scriptBinding = scriptBindings.get(name);
+            Class< ? > klass = vcontext.get(name).getClass();
+            Class< ? > scriptBinding = scriptBindings.get(name);
             if (scriptBinding == null || !klass.equals(scriptBinding)) {
                 bindings.put(name, klass);
             }

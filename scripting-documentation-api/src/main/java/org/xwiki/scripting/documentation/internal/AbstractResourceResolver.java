@@ -37,18 +37,18 @@ public abstract class AbstractResourceResolver implements ResourceResolver
     @Override
     public BindingResource resolve(Type type)
     {
-        if (type == null || !(type instanceof Class<?>)) {
+        if (type == null || !(type instanceof Class< ? >)) {
             return null;
         }
 
-        Class<?> klass = (Class<?>) type;
+        Class< ? > klass = (Class< ? >) type;
 
-        ClassLoader classLoader = ((Class<?>) type).getClassLoader();
+        ClassLoader classLoader = ((Class< ? >) type).getClassLoader();
         if (classLoader == null) {
             return null;
         }
 
-        URL url = ClasspathHelper.forClass(((Class<?>) type), classLoader);
+        URL url = ClasspathHelper.forClass(((Class< ? >) type), classLoader);
         if (url == null) {
             return null;
         }

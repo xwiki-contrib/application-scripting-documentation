@@ -43,10 +43,10 @@ public class VelocityScriptBindingsFinder extends AbstractVelocityScriptBindingF
     /**
      * @return the map of classes bindings in all velocity contexts
      */
-    protected Map<String, Class<?>> getBindings()
+    protected Map<String, Class< ? >> getBindings()
     {
         VelocityContext vContext = getVelocityContext();
-        Map<String, Class<?>> bindings = new HashMap<String, Class<?>>();
+        Map<String, Class< ? >> bindings = new HashMap<String, Class<?>>();
         while (vContext != null) {
             addAllBinding(vContext, bindings);
             vContext = (VelocityContext) vContext.getChainedContext();

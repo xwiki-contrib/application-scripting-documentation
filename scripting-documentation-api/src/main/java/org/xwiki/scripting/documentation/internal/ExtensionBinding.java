@@ -120,7 +120,7 @@ public class ExtensionBinding extends AbstractBinding
     @Override
     public URL getDocLink()
     {
-        if (!((Class<?>) getType()).getCanonicalName().contains(".internal.")) {
+        if (!((Class< ? >) getType()).getCanonicalName().contains(".internal.")) {
             try {
                 return new URL(resource.getDocBaseURL() + getClassPath() + HTML_EXT);
             } catch (Exception e) {

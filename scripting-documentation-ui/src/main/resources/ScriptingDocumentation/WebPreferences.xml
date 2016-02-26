@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xwikidoc>
+<!--
+  ~ See the NOTICE file distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+
+<xwikidoc version="1.2" reference="ScriptingDocumentation.WebPreferences" locale="">
   <web>ScriptingDocumentation</web>
   <name>WebPreferences</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
-  <parent>ScriptingDocumentation.WebHome</parent>
   <creator>xwiki:XWiki.Admin</creator>
-  <author>xwiki:XWiki.Admin</author>
-  <customClass/>
-  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421596360000</creationDate>
-  <date>1425592982000</date>
-  <contentUpdateDate>1421596360000</contentUpdateDate>
+  <parent>ScriptingDocumentation.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1456444117000</date>
+  <contentUpdateDate>1456444117000</contentUpdateDate>
   <version>1.1</version>
   <title/>
-  <defaultTemplate/>
-  <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
+  <content/>
   <object>
+    <name>ScriptingDocumentation.WebPreferences</name>
+    <number>0</number>
+    <className>XWiki.XWikiPreferences</className>
+    <guid>61084db5-5e42-44a7-acb5-c2b1319783d9</guid>
     <class>
       <name>XWiki.XWikiPreferences</name>
       <customClass/>
@@ -1199,10 +1221,6 @@
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
       </xwiki.title.mandatory>
     </class>
-    <name>ScriptingDocumentation.WebPreferences</name>
-    <number>0</number>
-    <className>XWiki.XWikiPreferences</className>
-    <guid>61084db5-5e42-44a7-acb5-c2b1319783d9</guid>
     <property>
       <leftPanels/>
     </property>
@@ -1240,5 +1258,4 @@
       <title/>
     </property>
   </object>
-  <content/>
 </xwikidoc>

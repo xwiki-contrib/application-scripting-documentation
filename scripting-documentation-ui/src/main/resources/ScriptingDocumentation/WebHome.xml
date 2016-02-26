@@ -1,28 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xwikidoc>
+<!--
+  ~ See the NOTICE file distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+
+<xwikidoc version="1.2" reference="ScriptingDocumentation.WebHome" locale="">
   <web>ScriptingDocumentation</web>
   <name>WebHome</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
-  <parent>Main.WebHome</parent>
   <creator>xwiki:XWiki.Admin</creator>
-  <author>xwiki:XWiki.Admin</author>
-  <customClass/>
-  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <creationDate>1421958504000</creationDate>
-  <date>1426173806000</date>
-  <contentUpdateDate>1426173806000</contentUpdateDate>
+  <parent>Main.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1456444117000</date>
+  <contentUpdateDate>1456444117000</contentUpdateDate>
   <version>1.1</version>
   <title>XWiki Scripting API Reference</title>
-  <defaultTemplate/>
-  <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content>{{velocity}}
+#if ($xcontext.action == 'get')
+  #if ("$!request.get('class')" != '')
+    #set($binding = $services.scriptdoc.getTypeInformation($request.get('class')))
+    #if ($binding)
+      #set ($url = $!binding.getDocLink().toString())
+    #end
+  #end
+  #if ("$!url" == '')
+    #set ($url = $!request.url)
+  #end 
+  #if ("$!url" != '' &amp;&amp; $regextool.compile('^https?://[^/]*\.xwiki\.org/.*').matcher($url.toLowerCase()).matches())
+    #set($docContent = $xwiki.getURLContent($url))
+    #set($docContentStart = 
+           $docContent.indexOf('&lt;!-- ======== START OF CLASS DATA ======== --&gt;'))
+    #set($docContentEnd = 
+           $docContent.indexOf('&lt;!-- ========= END OF CLASS DATA ========= --&gt;'))
+    #if($docContentStart != -1 &amp;&amp; $docContentEnd != -1)
+      #set($ok = $response.setHeader("Cache-Control", 'private'))
+      #set($ok = $response.setHeader("Pragma", 'cache'))
+      #set($expires = $datetool.date.getTime())
+      #set($expires = $expires+120000)##604800000)
+      #set($expires = $datetool.toDate($expires))
+      #set($ok = $response.setDateHeader("Expires",$expires.getTime()))
+      #set($ok = $response.setContentType("text/html"))
+      #set($ok = $xcontext.setFinished(true))
+      #set($output = $response.getOutputStream())
+      #if ($url != $!request.url)
+        #set($comment = "&lt;!-- $url --&gt;")
+        #set($ok = $output.write($comment.getBytes()))
+      #end
+      #set($ok = $output.write($docContent.substring($docContentStart, $docContentEnd).getBytes()))
+    #end
+  #else
+(% class="container-fluid" style="font-size:120%" %)(((
+(% class="row" %)(((
+)))(% class="row" %)(((
+(% class="col-sm-6" %)(((
+{{warning}}On very first load, the right panel could take time to load while the bindings caches are being filled.{{/warning}}
+)))(% class="col-sm-6" %)(((
+{{info}}Select a script binding on your right to get more detailed information about it.{{/info}}
+))))))
+(% class="row" %)(((
+The XWiki Scripting API allows script developers to access the XWiki API Java methods that the XWiki development team consider safe for you to use (i.e. for which backward compatibility is guaranteed). The XWiki Scripting API is directly accessible from your wiki pages using any supported scripting language like Velocity, Groovy, Javascript, Python, Ruby,...
+
+This documentation is dynamically generated based on the available bindings provided to the running wiki instance, and includes bindings provided by installed extensions. On your right, you have a categorized and searchable list of currently available bindings. Bindings are available in most languages just by their name, but for velocity, the name need to be prefixed by a dollar ($) sign. Some bindings are only available to velocity. When listed, their dollar sign is shown hard black.
+
+= Bindings categories
+
+; $services.localization.render('scriptdoc.kinds.template')
+: These are just velocity variables initialized in velocity templates used to render the current page. Some of them are very internal, but many are considered API since they provide useful shortcuts and fast access to frequently used information. These are obviously only accessible from velocity scripts.
+
+; $services.localization.render('scriptdoc.kinds.velocity')
+: These ones are mostly convenience tools provided to the velocity scripts to allow advanced manipulation of Java types. These are only accessible to velocity scripts. Other languages does not require those tools or can usually directly access them without these bindings.
+
+; $services.localization.render('scriptdoc.kinds.script')
+: These are mostly contextual bindings for the current request. They provide access to the current request and response, as well as to the current document being rendered, and the overall context of the request like the current user, etc... They also provide access to the initial core API and some legacy services. These bindings are provided to all script languages.
+
+; $services.localization.render('scriptdoc.kinds.service')
+: These are bindings provided to scripts by the XWiki modules. They all have the **\$services** binding as a common entry-point and the list of available services is extensible. This is the new modular way used in XWiki to provide services to scripts. These bindings are provided to all script languages.
+
+; $services.localization.render('scriptdoc.kinds.plugin')
+: These bindings was the old way to provide script services. Like them, they have a common entry point below the **\$xwiki** bindings. While some of them are still very useful, their usage are discouraged, and these services are progressively migrated to the new script services.
+
+= Deprecated, legacy, internal, and unstable bindings
+
+The deprecated (% class="label label-warning" %)D(% %), deprecated/legacy (% class="label label-danger" %)D(% %) and internal (% class="label label-primary" %)I(% %) bindings are not displayed by default, and you usually does not need them. But you should always pay attention to the **@Unstable** annotation. When you see code marked with this annotation it means it's a new public API that is still considered unstable and that can change at any time too.
+
+The deprecated bindings have been replaced by new methods and their usage are discouraged. When also marked legacy, the support of this feature has been moved to legacy packages, that are installed by default, but that could be replaced by non-legacy package to fully remove the feature.
+
+While documented, the internal bindings are very dangerous to be used. The backward compatibility is not guaranteed over time, even between minor versions. Some of the bindings do not have any meaning or stability at all.
+))))))
+  #end
+#else
+$xwiki.ssx.use($doc)
+{{html wiki="true"}}
+&lt;div javadoc-displayer style="display:none;"&gt;
+&lt;div ng-show='loadFailed'&gt;
+
+{{error}}
+**Unable to load the requested documentation**
+You are suffering from a network failure or the documentation server is experiencing some high load or an unexpected interruption of service.
+{{/error}}
+
+&lt;/div&gt;
+&lt;div ng-show='notFound'&gt;
+
+{{warning}}
+**Documentation not found**
+The requested documentation could not be found on the documentation server.
+{{/warning}}
+
+&lt;/div&gt;
+&lt;/div&gt;
+{{/html}}
+#end
+{{/velocity}}</content>
   <object>
+    <name>ScriptingDocumentation.WebHome</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>59656f4c-f646-497b-a14b-13dafff37638</guid>
     <class>
       <name>XWiki.StyleSheetExtension</name>
       <customClass/>
@@ -38,11 +156,11 @@
         <displayType>select</displayType>
         <multiSelect>0</multiSelect>
         <name>cache</name>
-        <number>5</number>
+        <number>6</number>
         <prettyName>Caching policy</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>long|short|default|forbid</values>
@@ -51,7 +169,7 @@
       <code>
         <disabled>0</disabled>
         <name>code</name>
-        <number>2</number>
+        <number>3</number>
         <prettyName>Code</prettyName>
         <rows>20</rows>
         <size>50</size>
@@ -64,11 +182,11 @@
         <displayType>select</displayType>
         <multiSelect>0</multiSelect>
         <name>contentType</name>
-        <number>6</number>
+        <number>1</number>
         <prettyName>Content Type</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>CSS|LESS</values>
@@ -77,7 +195,7 @@
       <name>
         <disabled>0</disabled>
         <name>name</name>
-        <number>1</number>
+        <number>2</number>
         <prettyName>Name</prettyName>
         <size>30</size>
         <unmodifiable>0</unmodifiable>
@@ -88,7 +206,7 @@
         <displayFormType>select</displayFormType>
         <displayType>yesno</displayType>
         <name>parse</name>
-        <number>4</number>
+        <number>5</number>
         <prettyName>Parse content</prettyName>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
@@ -99,21 +217,17 @@
         <displayType>select</displayType>
         <multiSelect>0</multiSelect>
         <name>use</name>
-        <number>3</number>
+        <number>4</number>
         <prettyName>Use this extension</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>currentPage|onDemand|always</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </use>
     </class>
-    <name>ScriptingDocumentation.WebHome</name>
-    <number>0</number>
-    <className>XWiki.StyleSheetExtension</className>
-    <guid>59656f4c-f646-497b-a14b-13dafff37638</guid>
     <property>
       <cache>long</cache>
     </property>
@@ -523,6 +637,10 @@ Formatting effect styles
     </property>
   </object>
   <object>
+    <name>ScriptingDocumentation.WebHome</name>
+    <number>0</number>
+    <className>XWiki.UIExtensionClass</className>
+    <guid>6b5ebb59-7772-4502-95b5-d1ea2ccccf38</guid>
     <class>
       <name>XWiki.UIExtensionClass</name>
       <customClass/>
@@ -580,17 +698,13 @@ Formatting effect styles
         <prettyName>Extension Scope</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
-        <separators> ,|</separators>
+        <separators>|, </separators>
         <size>1</size>
         <unmodifiable>0</unmodifiable>
         <values>wiki=Current Wiki|user=Current User|global=Global</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </scope>
     </class>
-    <name>ScriptingDocumentation.WebHome</name>
-    <number>0</number>
-    <className>XWiki.UIExtensionClass</className>
-    <guid>6b5ebb59-7772-4502-95b5-d1ea2ccccf38</guid>
     <property>
       <content/>
     </property>
@@ -609,101 +723,4 @@ icon=icon:book</parameters>
       <scope>wiki</scope>
     </property>
   </object>
-  <content>{{velocity}}
-#if ($xcontext.action == 'get')
-  #if ("$!request.get('class')" != '')
-    #set($binding = $services.scriptdoc.getTypeInformation($request.get('class')))
-    #if ($binding)
-      #set ($url = $!binding.getDocLink().toString())
-    #end
-  #end
-  #if ("$!url" == '')
-    #set ($url = $!request.url)
-  #end
-  #if ("$!url" != '' &amp;&amp; $regextool.compile('^https?://[^/]*\.xwiki\.org/.*').matcher($url.toLowerCase()).matches())
-    #set($docContent = $xwiki.getURLContent($url))
-    #set($docContentStart =
-           $docContent.indexOf('&lt;!-- ======== START OF CLASS DATA ======== --&gt;'))
-    #set($docContentEnd =
-           $docContent.indexOf('&lt;!-- ========= END OF CLASS DATA ========= --&gt;'))
-    #if($docContentStart != -1 &amp;&amp; $docContentEnd != -1)
-      #set($ok = $response.setHeader("Cache-Control", 'private'))
-      #set($ok = $response.setHeader("Pragma", 'cache'))
-      #set($expires = $datetool.date.getTime())
-      #set($expires = $expires+120000)##604800000)
-      #set($expires = $datetool.toDate($expires))
-      #set($ok = $response.setDateHeader("Expires",$expires.getTime()))
-      #set($ok = $response.setContentType("text/html"))
-      #set($ok = $xcontext.setFinished(true))
-      #set($output = $response.getOutputStream())
-      #if ($url != $!request.url)
-        #set($comment = "&lt;!-- $url --&gt;")
-        #set($ok = $output.write($comment.getBytes()))
-      #end
-      #set($ok = $output.write($docContent.substring($docContentStart, $docContentEnd).getBytes()))
-    #end
-  #else
-(% class="container-fluid" style="font-size:120%" %)(((
-(% class="row" %)(((
-)))(% class="row" %)(((
-(% class="col-sm-6" %)(((
-{{warning}}On very first load, the right panel could take time to load while the bindings caches are being filled.{{/warning}}
-)))(% class="col-sm-6" %)(((
-{{info}}Select a script binding on your right to get more detailed information about it.{{/info}}
-))))))
-(% class="row" %)(((
-The XWiki Scripting API allows script developers to access the XWiki API Java methods that the XWiki development team consider safe for you to use (i.e. for which backward compatibility is guaranteed). The XWiki Scripting API is directly accessible from your wiki pages using any supported scripting language like Velocity, Groovy, Javascript, Python, Ruby,...
-
-This documentation is dynamically generated based on the available bindings provided to the running wiki instance, and includes bindings provided by installed extensions. On your right, you have a categorized and searchable list of currently available bindings. Bindings are available in most languages just by their name, but for velocity, the name need to be prefixed by a dollar ($) sign. Some bindings are only available to velocity. When listed, their dollar sign is shown hard black.
-
-= Bindings categories
-
-; $services.localization.render('scriptdoc.kinds.template')
-: These are just velocity variables initialized in velocity templates used to render the current page. Some of them are very internal, but many are considered API since they provide useful shortcuts and fast access to frequently used information. These are obviously only accessible from velocity scripts.
-
-; $services.localization.render('scriptdoc.kinds.velocity')
-: These ones are mostly convenience tools provided to the velocity scripts to allow advanced manipulation of Java types. These are only accessible to velocity scripts. Other languages does not require those tools or can usually directly access them without these bindings.
-
-; $services.localization.render('scriptdoc.kinds.script')
-: These are mostly contextual bindings for the current request. They provide access to the current request and response, as well as to the current document being rendered, and the overall context of the request like the current user, etc... They also provide access to the initial core API and some legacy services. These bindings are provided to all script languages.
-
-; $services.localization.render('scriptdoc.kinds.service')
-: These are bindings provided to scripts by the XWiki modules. They all have the **\$services** binding as a common entry-point and the list of available services is extensible. This is the new modular way used in XWiki to provide services to scripts. These bindings are provided to all script languages.
-
-; $services.localization.render('scriptdoc.kinds.plugin')
-: These bindings was the old way to provide script services. Like them, they have a common entry point below the **\$xwiki** bindings. While some of them are still very useful, their usage are discouraged, and these services are progressively migrated to the new script services.
-
-= Deprecated, legacy, internal, and unstable bindings
-
-The deprecated (% class="label label-warning" %)D(% %), deprecated/legacy (% class="label label-danger" %)D(% %) and internal (% class="label label-primary" %)I(% %) bindings are not displayed by default, and you usually does not need them. But you should always pay attention to the **@Unstable** annotation. When you see code marked with this annotation it means it's a new public API that is still considered unstable and that can change at any time too.
-
-The deprecated bindings have been replaced by new methods and their usage are discouraged. When also marked legacy, the support of this feature has been moved to legacy packages, that are installed by default, but that could be replaced by non-legacy package to fully remove the feature.
-
-While documented, the internal bindings are very dangerous to be used. The backward compatibility is not guaranteed over time, even between minor versions. Some of the bindings do not have any meaning or stability at all.
-))))))
-  #end
-#else
-$xwiki.ssx.use($doc)
-{{html wiki="true"}}
-&lt;div javadoc-displayer style="display:none;"&gt;
-&lt;div ng-show='loadFailed'&gt;
-
-{{error}}
-**Unable to load the requested documentation**
-You are suffering from a network failure or the documentation server is experiencing some high load or an unexpected interruption of service.
-{{/error}}
-
-&lt;/div&gt;
-&lt;div ng-show='notFound'&gt;
-
-{{warning}}
-**Documentation not found**
-The requested documentation could not be found on the documentation server.
-{{/warning}}
-
-&lt;/div&gt;
-&lt;/div&gt;
-{{/html}}
-#end
-{{/velocity}}</content>
 </xwikidoc>

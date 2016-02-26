@@ -35,6 +35,7 @@
     <xwiki.clirr.skip>true</xwiki.clirr.skip>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>Scripting Documentation Application</xwiki.extension.name>
+    <xwiki.extension.category>application</xwiki.extension.category>
    <platform.version>6.2.5</platform.version>
    <rendering.version>${platform.version}</rendering.version>
   </properties>

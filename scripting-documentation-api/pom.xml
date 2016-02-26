@@ -33,6 +33,7 @@
   <properties>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>Scripting Documentation API</xwiki.extension.name>
+    <xwiki.extension.category>API</xwiki.extension.category>
     <checkstyle.suppressions.location>${basedir}/src/main/checkstyle/checkstyle-suppressions.xml</checkstyle.suppressions.location>
   </properties>
   <dependencies>

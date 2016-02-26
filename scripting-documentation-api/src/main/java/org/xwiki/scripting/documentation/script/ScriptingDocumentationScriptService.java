@@ -35,8 +35,10 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.script.service.ScriptService;
+import org.xwiki.scripting.documentation.Binding;
 import org.xwiki.scripting.documentation.BindingKind;
 import org.xwiki.scripting.documentation.ScriptBindingsFinder;
+import org.xwiki.scripting.documentation.TypeInformationFinder;
 
 /**
  * Make it easy to access scripting documentation finders from scripts.
@@ -54,6 +56,9 @@ public class ScriptingDocumentationScriptService implements ScriptService
     @Inject
     @Named("context")
     private Provider<ComponentManager> componentManager;
+
+    @Inject
+    private TypeInformationFinder typeInformationFinder;
 
     /**
      * @return a list of available kinds of bindings finders.
@@ -115,5 +120,12 @@ public class ScriptingDocumentationScriptService implements ScriptService
         }
     }
 
-
+    /**
+     * Return information about a Java type.
+     * @param name the fully qualified name of the desired class.
+     * @return a binding providing information about the given class or null if not found.
+     */
+    public Binding getTypeInformation(String name) {
+        return typeInformationFinder.find(name);
+    }
 }

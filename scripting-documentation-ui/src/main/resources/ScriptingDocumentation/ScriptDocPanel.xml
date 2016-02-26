@@ -452,12 +452,13 @@ require(['jquery','angular','angular-loading-bar'],
                    ['xwikiService', '$location',
                     function(xwikiService, $location) {
 
-    var _location = null, _base = null, _hash = null, _element = $('html'),
+    var _location = null, _base = null, _hash = null, _params = null, _element = $('html'),
         absUrlRE = /^https?:\/\//i,
         hostUrlRE = /^(https?:\/\/[^/]+)/i
         xwikiUrlRE = /^https?:\/\/[^/]*\.xwiki\.org/i,
-        parentRE = /[\-\w]+\/\.\.\//
-        extensionUrlRE = /^https?:\/\/extensions\.xwiki\.org\/?\?id=([^:]+):([^:]+)(?::([^:]+))?:::.+\/apidocs(\/[^?]+)\?is-external=true$/;
+        parentRE = /[\-\w]+\/\.\.\//,
+        extensionUrlRE = /^https?:\/\/extensions\.xwiki\.org\/?\?id=([^:]+):([^:]+)(?::([^:]+))?:::.+\/apidocs(\/[^?]+)\?is-external=true$/,
+        classRE = /^[a-zA-Z_$][a-zA-Z\d_$]+\.xwiki\.([a-zA-Z_$][a-zA-Z\d_$]*\.)*[a-zA-Z_$][a-zA-Z\d_$]*$/;
 
     function isURLAbsolute(url) {
       return absUrlRE.test(url);
@@ -465,6 +466,10 @@ require(['jquery','angular','angular-loading-bar'],
 
     function isXWikiURL(url) {
       return xwikiUrlRE.test(url);
+    }
+
+    function isClassName(name) {
+      return classRE.test(name);
     }
 
     function reduceURL(url) {
@@ -546,7 +551,9 @@ require(['jquery','angular','angular-loading-bar'],
       var pval = value.split('#'),
           url = pval[0], hash = pval[1] ? decodeURIComponent(pval[1]) : null;
 
-      if (isURLAbsolute(url)) {
+      if (url.startsWith('&amp;')) {
+        _params = url;
+      } else if (isURLAbsolute(url)) {
         if (isXWikiURL(url)) {
           // compute redirection for Javadoc URL that lead to e.x.o
           var parsedUrl = parseExtensionURL(url)
@@ -581,7 +588,20 @@ require(['jquery','angular','angular-loading-bar'],
       }
     }
 
+    function getPotentialLink(node) {
+      if(node.childNodes.length == 1 &amp;&amp; node.firstChild.nodeType == 3) {
+        var text = node.firstChild.data;
+        if (text &amp;&amp; isClassName(text)) {
+          return text;
+        } 
+      }
+      return null;
+    }
+
     return {
+      isExternalUrl: function(url) {
+        return isURLAbsolute(url) &amp;&amp; !isXWikiURL(url);
+      },
 
       /**
        * URL of the currently selected javadoc
@@ -597,28 +617,50 @@ require(['jquery','angular','angular-loading-bar'],
           setLocation(value)
         } else {
           // Getter
+          var url = xwikiService.proxyURL;
           if (_location) {
-            return xwikiService.proxyURL + encodeURIComponent(_location);
-          } else {
-            return xwikiService.proxyURL;
+            url += encodeURIComponent(_location);
           }
+          if (_params) {
+            url += _params;
+          }
+          return url;
         }
       },
 
-      postLoadHook : function(scope, element) {
+      postLoadHook : function(element) {
+        if (_params) {
+          _params = null;
+          var comments = $(element.children()[0]).contents().filter(function(){ return this.nodeType == 8;});
+          if (comments.size() &gt; 0) {
+            var url = comments[0].data.trim();
+            if (isURLAbsolute(url)) {
+              setNewLocation(url, null);
+              updateBrowserLocation();
+            }
+          }
+        }
         scrollToHash(_hash);
       },
 
       handleClick : function(event) {
+        event.preventDefault();
         var target = $(event.target).attr('href');
         if (target) {
-          event.preventDefault();
           setLocation(target);
+        }
+        target = getPotentialLink(event.target);
+        if (target) {
+          setLocation("&amp;class=" + encodeURIComponent(target));
         }
       },
 
-      isExternalUrl: function(url) {
-        return isURLAbsolute(url) &amp;&amp; !isXWikiURL(url);
+      hoverIn : function(event) {
+        var target = $(event.target);
+        if (!target.attr('href') &amp;&amp; getPotentialLink(event.target)) {
+          target.addClass('hoverlink');
+          $(target).one('mouseleave', function() { target.removeClass('hoverlink') });
+        }  
       }
     };
   }]);
@@ -690,7 +732,7 @@ require(['jquery','angular','angular-loading-bar'],
       restrict: 'A',
       scope : false,
       transclude:true,
-      template: "&lt;div id='javadocdiv' ng-include='javadocService.location()' ng-click='javadocService.handleClick($event)'&gt;&lt;/div&gt;&lt;div ng-transclude/&gt;",
+      template: "&lt;div id='javadocdiv' ng-include='javadocService.location()' ng-mouseover='javadocService.hoverIn($event)' ng-click='javadocService.handleClick($event)'&gt;&lt;/div&gt;&lt;div ng-transclude/&gt;",
       link: function($scope, $element, $attrs){
         var el = $element;
         el.removeAttr('style');
@@ -700,7 +742,7 @@ require(['jquery','angular','angular-loading-bar'],
           $scope.loadFailed = false;
           $scope.notFound = !div.html();
           if (!$scope.notFound) {
-            javadocService.postLoadHook();
+            javadocService.postLoadHook(el);
           }
         });
         $scope.$on('includeContentError', function() {

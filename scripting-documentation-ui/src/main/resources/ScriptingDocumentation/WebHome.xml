@@ -129,6 +129,10 @@ Overall document style
     font-size:85%;
     margin:0;
 }
+#javadocdiv .hoverlink {
+    color:#bb7a2a;
+    cursor: pointer;
+}
 #javadocdiv a:link, #javadocdiv a:visited {
     text-decoration:none;
     color:#4c6b87;
@@ -607,11 +611,20 @@ icon=icon:book</parameters>
   </object>
   <content>{{velocity}}
 #if ($xcontext.action == 'get')
-  #if ($request.url &amp;&amp; $request.url != '' &amp;&amp; $regextool.compile('^https?://[^/]*\.xwiki\.org/.*').matcher($request.url.toLowerCase()).matches())
-    #set($docContent = $xwiki.getURLContent($request.url))
-    #set($docContentStart = 
+  #if ("$!request.get('class')" != '')
+    #set($binding = $services.scriptdoc.getTypeInformation($request.get('class')))
+    #if ($binding)
+      #set ($url = $!binding.getDocLink().toString())
+    #end
+  #end
+  #if ("$!url" == '')
+    #set ($url = $!request.url)
+  #end
+  #if ("$!url" != '' &amp;&amp; $regextool.compile('^https?://[^/]*\.xwiki\.org/.*').matcher($url.toLowerCase()).matches())
+    #set($docContent = $xwiki.getURLContent($url))
+    #set($docContentStart =
            $docContent.indexOf('&lt;!-- ======== START OF CLASS DATA ======== --&gt;'))
-    #set($docContentEnd = 
+    #set($docContentEnd =
            $docContent.indexOf('&lt;!-- ========= END OF CLASS DATA ========= --&gt;'))
     #if($docContentStart != -1 &amp;&amp; $docContentEnd != -1)
       #set($ok = $response.setHeader("Cache-Control", 'private'))
@@ -622,7 +635,12 @@ icon=icon:book</parameters>
       #set($ok = $response.setDateHeader("Expires",$expires.getTime()))
       #set($ok = $response.setContentType("text/html"))
       #set($ok = $xcontext.setFinished(true))
-      #set($ok = $response.getOutputStream().write($docContent.substring($docContentStart, $docContentEnd).getBytes()))
+      #set($output = $response.getOutputStream())
+      #if ($url != $!request.url)
+        #set($comment = "&lt;!-- $url --&gt;")
+        #set($ok = $output.write($comment.getBytes()))
+      #end
+      #set($ok = $output.write($docContent.substring($docContentStart, $docContentEnd).getBytes()))
     #end
   #else
 (% class="container-fluid" style="font-size:120%" %)(((

@@ -2,6 +2,7 @@ org.xwiki.scripting.documentation.internal.DefaultBindingCache
 org.xwiki.scripting.documentation.internal.DefaultBindingResourceCache
 org.xwiki.scripting.documentation.internal.DefaultResourceResolver
 org.xwiki.scripting.documentation.internal.DefaultScriptBindingsFinder
+org.xwiki.scripting.documentation.internal.DefaultTypeInformationFinder
 org.xwiki.scripting.documentation.internal.ExtensionResourceResolver
 org.xwiki.scripting.documentation.internal.InternalPluginScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.PluginScriptBindingsFinder

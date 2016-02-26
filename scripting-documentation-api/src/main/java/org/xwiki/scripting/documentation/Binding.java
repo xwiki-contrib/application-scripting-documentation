@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 
 /**
- * Represent a binding and provide information about it.
+ * Represent a Type or a binding with information about it.
  *
  * @version $Id$
  */

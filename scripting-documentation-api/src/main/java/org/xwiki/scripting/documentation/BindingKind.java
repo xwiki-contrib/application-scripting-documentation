@@ -57,6 +57,11 @@ public class BindingKind
      */
     public static final BindingKind INTERNAL_PLUGIN = new BindingKind("internalplugin");
 
+    /**
+     * Any java class (not necessarily bound anywhere)
+     */
+    public static final BindingKind JAVA = new BindingKind("java");
+
     private final String type;
 
     /**

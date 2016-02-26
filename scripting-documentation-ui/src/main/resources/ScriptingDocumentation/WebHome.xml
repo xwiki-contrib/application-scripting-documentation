@@ -89,7 +89,7 @@ This documentation is dynamically generated based on the available bindings prov
 = Bindings categories
 
 ; $services.localization.render('scriptdoc.kinds.template')
-: These are just velocity variables initialized in velocity templates used to render the current page. Some of them are very internal, but many are considered API since they provide useful shortcuts and fast access to frequently used information. These are obviously only accessible from velocity scripts.
+: These are just velocity variables initialized in velocity templates used to render the current page. Some of them are very internal, but many are considered API since they provide useful shortcuts and fast access to frequently used information. These are obviously only accessible from velocity scripts, and most of them will only be accurate for velocity script in the content or objects of the requested document.
 
 ; $services.localization.render('scriptdoc.kinds.velocity')
 : These ones are mostly convenience tools provided to the velocity scripts to allow advanced manipulation of Java types. These are only accessible to velocity scripts. Other languages does not require those tools or can usually directly access them without these bindings.

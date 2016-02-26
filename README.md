@@ -9,11 +9,13 @@ descriptions and links to documentation from a localization bundle. An initial b
 
 Compare to the actual Scripting Reference Documentation, the usage of this application does not require any work
 effort to generate the documentation. It is based on what we already release. The current API does not allow access 
-to older versions, but this could be implemented in the future, at least, up to version 3.5 where there have been a
-couple of changes that are not easier to cope with.
-However, it has already a special handling for SNAPSHOT version (for which javadoc is not generated) to point to the
-latest release preceding that SNAPSHOT version.
+to older versions, it is compatible with 4.3 or earlier, but it could be implemented up to version 3.5 where there 
+have been a couple of changes that are not easier to cope with. However, it has already a special handling for SNAPSHOT 
+version (for which javadoc is not generated) to point to the latest release preceding that SNAPSHOT version.
 
-The UI is based on an AngularJS application and provide access to a part of the information provided by the API. The
-documentation is displayed integrated into the XWiki page without using iFrames and support the browser navigation
-buttons (back/forward).
+The UI is based on an AngularJS application and requires 6.2.5 or later, due for the needs of WebJars.
+The UI provide access to a part of the information provided by the API. The documentation is displayed integrated into
+the XWiki page without using iFrames and support the browser navigation buttons (back/forward). Some links missing in
+the Javadoc when crossing projects boundaries are dymically added to improve navigation in the project.
+By safety and respect to copyrights of external projects, links to external documentation outside of the XWiki project
+are open in a separate window.

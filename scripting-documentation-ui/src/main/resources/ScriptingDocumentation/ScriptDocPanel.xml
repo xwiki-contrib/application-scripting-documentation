@@ -42,7 +42,7 @@
   <content>{{velocity}}
 #if ($xcontext.action == 'get')
   #if ($request.get == 'kinds')
-    #set ($defaultKinds = ['template','velocity','script','service','plugin'])
+    #set ($defaultKinds = ['velocity','script','service','plugin'])
     #set ($availableKinds = $services.scriptdoc.getAvailableBindingKinds())
     #set ($additionalKinds = [])
     #foreach ($bindingKind in $availableKinds)

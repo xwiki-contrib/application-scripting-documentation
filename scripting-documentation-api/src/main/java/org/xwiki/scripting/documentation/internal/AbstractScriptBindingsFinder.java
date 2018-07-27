@@ -23,6 +23,7 @@ package org.xwiki.scripting.documentation.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.xwiki.scripting.documentation.Binding;
@@ -36,27 +37,14 @@ import org.xwiki.scripting.documentation.ScriptBindingsFinder;
  */
 public abstract class AbstractScriptBindingsFinder extends AbstractTypeInformationFinder implements ScriptBindingsFinder
 {
-    protected abstract Map<String, Class< ? >> getBindings();
+    protected abstract Map<String, Class<?>> getBindings();
 
     protected abstract String getFullName(String name);
 
     @Override
     public List<Binding> find()
     {
-        List<Binding> bindings = new ArrayList<Binding>();
-        for (Map.Entry<String, Class< ? >> entry : getBindings().entrySet()) {
-            String name = entry.getKey();
-            String fullName = getFullName(name);
-            Class< ? > klass = entry.getValue();
-
-            Binding binding = bindingCache.get(name, klass, getType());
-            if (binding == null) {
-                binding = newBinding(klass, name, fullName);
-            }
-            bindings.add(binding);
-        }
-
-        return bindings;
+        return find((Pattern) null);
     }
 
     @Override
@@ -72,18 +60,23 @@ public abstract class AbstractScriptBindingsFinder extends AbstractTypeInformati
     @Override
     public Binding find(String name)
     {
-        Class< ? > klass = getBindings().get(name);
+        Class<?> klass = getBindings().get(name);
 
         if (klass == null) {
             return null;
         }
 
         String fullName = getFullName(name);
-        Binding binding = bindingCache.get(name, klass, getType());
-        if (binding == null) {
-            binding = newBinding(klass, name, fullName);
+
+        // Make sure that only one thread at a time manipulate the cache to avoid useless duplication work
+        synchronized (this.bindingCache) {
+            Binding binding = this.bindingCache.get(name, klass, getType());
+            if (binding == null) {
+                binding = newBinding(klass, name, fullName);
+            }
+
+            return binding;
         }
-        return binding;
     }
 
     @Override
@@ -100,18 +93,24 @@ public abstract class AbstractScriptBindingsFinder extends AbstractTypeInformati
     public List<Binding> find(Pattern regex)
     {
         List<Binding> bindings = new ArrayList<Binding>();
-        for (Map.Entry<String, Class< ? >> entry : getBindings().entrySet()) {
-            String name = entry.getKey();
 
-            if (regex.matcher(name).matches()) {
-                String fullName = getFullName(name);
-                Class< ? > klass = entry.getValue();
+        Set<Map.Entry<String, Class<?>>> entries = getBindings().entrySet();
 
-                Binding binding = bindingCache.get(name, klass, getType());
-                if (binding == null) {
-                    binding = newBinding(klass, name, fullName);
+        // Make sure that only one thread at a time manipulate the cache to avoid useless duplication work
+        synchronized (this.bindingCache) {
+            for (Map.Entry<String, Class<?>> entry : entries) {
+                String name = entry.getKey();
+
+                if (regex == null || regex.matcher(name).matches()) {
+                    String fullName = getFullName(name);
+                    Class<?> klass = entry.getValue();
+
+                    Binding binding = bindingCache.get(name, klass, getType());
+                    if (binding == null) {
+                        binding = newBinding(klass, name, fullName);
+                    }
+                    bindings.add(binding);
                 }
-                bindings.add(binding);
             }
         }
 
@@ -128,8 +127,9 @@ public abstract class AbstractScriptBindingsFinder extends AbstractTypeInformati
         return find(regex);
     }
 
-    protected Binding newBinding(Class< ? > bindingClass, String name, String fullName)
+    @Override
+    protected Binding newBinding(Class<?> bindingClass, String name, String fullName)
     {
-        return bindingCache.add(super.newBinding(bindingClass, name, fullName));
+        return this.bindingCache.add(super.newBinding(bindingClass, name, fullName));
     }
 }

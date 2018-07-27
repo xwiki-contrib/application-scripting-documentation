@@ -6,6 +6,7 @@ org.xwiki.scripting.documentation.internal.DefaultTypeInformationFinder
 org.xwiki.scripting.documentation.internal.ExtensionResourceResolver
 org.xwiki.scripting.documentation.internal.InternalPluginScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.PluginScriptBindingsFinder
+org.xwiki.scripting.documentation.internal.ScriptBindingsFinderInitializerListener
 org.xwiki.scripting.documentation.internal.ScriptScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.ServiceScriptBindingsFinder
 org.xwiki.scripting.documentation.internal.TemplateScriptBindingsFinder

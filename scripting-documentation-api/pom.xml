@@ -27,7 +27,7 @@
     <version>1.2-SNAPSHOT</version>
   </parent>
   <artifactId>scripting-documentation-api</artifactId>
-  <name>Scriptint Documentation - API</name>
+  <name>Scripting Documentation - API</name>
   <packaging>jar</packaging>
   <description>Provides useful helpers to generate scripting documentation</description>
   <properties>

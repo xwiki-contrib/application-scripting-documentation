@@ -42,7 +42,10 @@
     <url>https://github.com/xwiki-contrib/application-scripting-documentation/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <issueManagement />
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.xwiki.org/jira/browse/SCRIPTDOC</url>
+  </issueManagement>
   <developers>
     <developer>
       <id>dgervalle</id>

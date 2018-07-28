@@ -27,12 +27,19 @@ import javax.inject.Inject;
 import javax.script.ScriptContext;
 
 import org.apache.velocity.VelocityContext;
+import org.slf4j.Logger;
 import org.xwiki.component.descriptor.ComponentDescriptor;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
+import org.xwiki.component.descriptor.DefaultComponentDependency;
 import org.xwiki.component.descriptor.DefaultComponentDescriptor;
+import org.xwiki.localization.LocalizationManager;
+import org.xwiki.rendering.renderer.PrintRenderer;
 import org.xwiki.script.ScriptContextManager;
+import org.xwiki.scripting.documentation.BindingCache;
 import org.xwiki.scripting.documentation.BindingKind;
+import org.xwiki.scripting.documentation.ResourceResolver;
 import org.xwiki.scripting.documentation.ScriptBindingsFinder;
+import org.xwiki.velocity.VelocityContextFactory;
 import org.xwiki.velocity.VelocityManager;
 
 /**
@@ -67,6 +74,54 @@ public class TemplateScriptBindingsFinder extends AbstractVelocityScriptBindingF
         descriptor.setRoleHint("template");
         descriptor.setImplementation(TemplateScriptBindingsFinder.class);
         descriptor.setInstantiationStrategy(ComponentInstantiationStrategy.SINGLETON);
+
+        DefaultComponentDependency<VelocityManager> velocityManagerDependency =
+            new DefaultComponentDependency<VelocityManager>();
+        velocityManagerDependency.setName("velocityManager");
+        velocityManagerDependency.setRoleType(VelocityManager.class);
+        descriptor.addComponentDependency(velocityManagerDependency);
+
+        DefaultComponentDependency<ScriptContextManager> scriptContextManagerDependency =
+            new DefaultComponentDependency<ScriptContextManager>();
+        velocityManagerDependency.setName("scriptContextManager");
+        velocityManagerDependency.setRoleType(ScriptContextManager.class);
+        descriptor.addComponentDependency(scriptContextManagerDependency);
+
+        DefaultComponentDependency<VelocityContextFactory> velocityContextFactoryDependency =
+            new DefaultComponentDependency<VelocityContextFactory>();
+        velocityManagerDependency.setName("velocityContextFactory");
+        velocityManagerDependency.setRoleType(VelocityContextFactory.class);
+        descriptor.addComponentDependency(velocityContextFactoryDependency);
+
+        DefaultComponentDependency<Logger> loggerDependency = new DefaultComponentDependency<Logger>();
+        velocityManagerDependency.setName("logger");
+        velocityManagerDependency.setRoleType(Logger.class);
+        descriptor.addComponentDependency(loggerDependency);
+
+        DefaultComponentDependency<BindingCache> bindingCacheDependency =
+            new DefaultComponentDependency<BindingCache>();
+        velocityManagerDependency.setName("bindingCache");
+        velocityManagerDependency.setRoleType(BindingCache.class);
+        descriptor.addComponentDependency(bindingCacheDependency);
+
+        DefaultComponentDependency<ResourceResolver> resourceResolverDependency =
+            new DefaultComponentDependency<ResourceResolver>();
+        velocityManagerDependency.setName("resourceResolver");
+        velocityManagerDependency.setRoleType(ResourceResolver.class);
+        descriptor.addComponentDependency(resourceResolverDependency);
+
+        DefaultComponentDependency<PrintRenderer> plainTextRendererDependency =
+            new DefaultComponentDependency<PrintRenderer>();
+        velocityManagerDependency.setName("plainTextRenderer");
+        velocityManagerDependency.setRoleHint("plain/1.0");
+        velocityManagerDependency.setRoleType(PrintRenderer.class);
+        descriptor.addComponentDependency(plainTextRendererDependency);
+
+        DefaultComponentDependency<LocalizationManager> localizationDependency =
+            new DefaultComponentDependency<LocalizationManager>();
+        velocityManagerDependency.setName("localization");
+        velocityManagerDependency.setRoleType(LocalizationManager.class);
+        descriptor.addComponentDependency(localizationDependency);
 
         return descriptor;
     }

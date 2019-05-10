@@ -850,7 +850,9 @@ require(['jquery','angular','angular-loading-bar'],
               return $(window).width() < 975 ? 'top' : 'left';
             }
           });
-          $(element).popover('toggle');
+          $(element).popover('show');
+        }, function(){
+          $(element).popover('hide');
         });
       }
     };

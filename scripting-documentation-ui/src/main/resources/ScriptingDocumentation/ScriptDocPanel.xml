@@ -845,6 +845,11 @@ require(['jquery','angular','angular-loading-bar'],
       restrict: 'A',
       link: function(scope, element, attrs){
         $(element).hover(function(){
+          $(element).popover({
+            placement: function() {
+              return $(window).width() < 975 ? 'top' : 'left';
+            }
+          });
           $(element).popover('show');
         }, function(){
           $(element).popover('hide');

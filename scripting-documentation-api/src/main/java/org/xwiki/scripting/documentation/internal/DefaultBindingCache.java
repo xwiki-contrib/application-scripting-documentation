@@ -30,6 +30,8 @@ import org.xwiki.cache.CacheManager;
 import org.xwiki.cache.config.CacheConfiguration;
 import org.xwiki.cache.eviction.LRUEvictionConfiguration;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.manager.ComponentLifecycleException;
+import org.xwiki.component.phase.Disposable;
 import org.xwiki.component.phase.Initializable;
 import org.xwiki.component.phase.InitializationException;
 import org.xwiki.scripting.documentation.Binding;
@@ -43,7 +45,7 @@ import org.xwiki.scripting.documentation.BindingKind;
  */
 @Component
 @Singleton
-public class DefaultBindingCache implements BindingCache, Initializable
+public class DefaultBindingCache implements BindingCache, Initializable, Disposable
 {
     /** Default capacity for security cache. */
     private static final int DEFAULT_CAPACITY = 500;
@@ -75,6 +77,14 @@ public class DefaultBindingCache implements BindingCache, Initializable
     public void initialize() throws InitializationException
     {
         cache = newCache();
+    }
+
+    @Override
+    public void dispose() throws ComponentLifecycleException
+    {
+        if (this.cache != null) {
+            this.cache.dispose();
+        }
     }
 
     private static int getBindingHashCode(String name, Type bindingType, BindingKind kind)

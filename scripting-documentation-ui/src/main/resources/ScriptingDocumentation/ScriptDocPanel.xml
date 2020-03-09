@@ -59,7 +59,7 @@
     #end
     [
       #foreach ($kind in $defaultKinds)
-        #jsonKind($kind $velocityCount)
+        #jsonKind($kind $foreach.count)
       #end
       #foreach ($kind in $additionalKinds)
         #jsonKind($kind 0)
@@ -71,7 +71,7 @@
       #foreach($binding in $services.scriptdoc.getBindingsFinder().find())
         #set($klass = $binding.type.getName())
         #set($ki = $klass.lastIndexOf('.') + 1)
-        #if ($velocityCount != 1),
+        #if ($foreach.count != 1),
         #end
         {##
           "kind" : "$escapetool.json($binding.kind)", ##

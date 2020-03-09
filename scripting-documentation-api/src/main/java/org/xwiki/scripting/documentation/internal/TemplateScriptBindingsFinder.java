@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.script.ScriptContext;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.xwiki.component.descriptor.ComponentDescriptor;
@@ -173,12 +174,30 @@ public class TemplateScriptBindingsFinder extends AbstractVelocityScriptBindingF
     private static void addAllBinding(VelocityContext vcontext, Map<String, Class<?>> scriptBindings,
         Map<String, Class<?>> bindings)
     {
-        for (Object key : vcontext.getKeys()) {
-            String name = key.toString();
-            Class<?> klass = vcontext.get(name).getClass();
-            Class<?> scriptBinding = scriptBindings.get(name);
-            if (scriptBinding == null || !klass.equals(scriptBinding)) {
-                bindings.put(name, klass);
+        // Not very nice but there is no much choice since the VelocityContext#getKeys() signature changed in Velocity
+        // 2.2
+        // TODO: get rid if this hack when upgrading to 12.0+
+        try {
+            Map<String, Object> internalContext = (Map) FieldUtils.readField(vcontext, "context", true);
+
+            for (Map.Entry<String, Object> entry : internalContext.entrySet()) {
+                if (entry.getValue() != null) {
+                    Class<?> klass = entry.getValue().getClass();
+                    Class<?> scriptBinding = scriptBindings.get(entry.getKey());
+                    if (scriptBinding == null || !klass.equals(scriptBinding)) {
+                        bindings.put(entry.getKey(), klass);
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            // Fallback on Velocity 1.7 API and hope for the best
+            for (Object key : vcontext.getKeys()) {
+                String name = key.toString();
+                Class<?> klass = vcontext.get(name).getClass();
+                Class<?> scriptBinding = scriptBindings.get(name);
+                if (scriptBinding == null || !klass.equals(scriptBinding)) {
+                    bindings.put(name, klass);
+                }
             }
         }
     }

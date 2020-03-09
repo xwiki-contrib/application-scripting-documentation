@@ -58,7 +58,9 @@ public class ScriptScriptBindingsFinder extends AbstractScriptBindingsFinder
         Map<String, Class< ? >> bindings = new HashMap<String, Class<?>>();
         if (scriptContext != null) {
             for (Map.Entry<String, Object> entry : scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).entrySet()) {
-                bindings.put(entry.getKey(), entry.getValue().getClass());
+                if (entry.getValue() != null) {
+                    bindings.put(entry.getKey(), entry.getValue().getClass());
+                }
             }
         }
 

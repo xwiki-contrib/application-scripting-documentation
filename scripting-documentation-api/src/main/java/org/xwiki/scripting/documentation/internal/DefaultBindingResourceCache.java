@@ -73,15 +73,15 @@ public class DefaultBindingResourceCache implements BindingResourceCache, Initia
     @Override
     public void initialize() throws InitializationException
     {
-        if (this.cache != null) {
-            cache = newCache();
-        }
+        cache = newCache();
     }
 
     @Override
     public void dispose() throws ComponentLifecycleException
     {
-        this.cache.dispose();
+        if (this.cache != null) {
+            this.cache.dispose();
+        }
     }
 
     @Override

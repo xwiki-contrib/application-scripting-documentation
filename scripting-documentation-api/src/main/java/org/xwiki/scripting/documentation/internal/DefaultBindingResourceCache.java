@@ -28,6 +28,8 @@ import org.xwiki.cache.CacheManager;
 import org.xwiki.cache.config.CacheConfiguration;
 import org.xwiki.cache.eviction.LRUEvictionConfiguration;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.manager.ComponentLifecycleException;
+import org.xwiki.component.phase.Disposable;
 import org.xwiki.component.phase.Initializable;
 import org.xwiki.component.phase.InitializationException;
 import org.xwiki.scripting.documentation.BindingResource;
@@ -40,7 +42,7 @@ import org.xwiki.scripting.documentation.BindingResourceCache;
  */
 @Component
 @Singleton
-public class DefaultBindingResourceCache implements BindingResourceCache, Initializable
+public class DefaultBindingResourceCache implements BindingResourceCache, Initializable, Disposable
 {
     /** Default capacity for security cache. */
     private static final int DEFAULT_CAPACITY = 100;
@@ -71,7 +73,15 @@ public class DefaultBindingResourceCache implements BindingResourceCache, Initia
     @Override
     public void initialize() throws InitializationException
     {
-        cache = newCache();
+        if (this.cache != null) {
+            cache = newCache();
+        }
+    }
+
+    @Override
+    public void dispose() throws ComponentLifecycleException
+    {
+        this.cache.dispose();
     }
 
     @Override

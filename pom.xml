@@ -28,7 +28,7 @@
   </parent>
   <groupId>org.xwiki.contrib.scriptingdocumentation</groupId>
   <artifactId>scripting-documentation</artifactId>
-  <version>1.3.2</version>
+  <version>1.3.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Scripting Documentation - Parent POM</name>
   <description>Scripting Documentation - Parent POM</description>
@@ -36,7 +36,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/application-scripting-documentation.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/application-scripting-documentation.git</developerConnection>
     <url>https://github.com/xwiki-contrib/application-scripting-documentation/tree/master</url>
-    <tag>scripting-documentation-1.3.2</tag>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>jira</system>

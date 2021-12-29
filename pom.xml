@@ -33,16 +33,16 @@
   <packaging>pom</packaging>
   <name>Scripting Documentation - Parent POM</name>
   <description>Scripting Documentation - Parent POM</description>
+  <properties>
+    <xwiki.issueManagement.jira.id>SCRIPTDOC</xwiki.issueManagement.jira.id>
+    <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
+  </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/application-scripting-documentation.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/application-scripting-documentation.git</developerConnection>
     <url>https://github.com/xwiki-contrib/application-scripting-documentation/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.xwiki.org/jira/browse/SCRIPTDOC</url>
-  </issueManagement>
   <developers>
     <developer>
       <id>dgervalle</id>

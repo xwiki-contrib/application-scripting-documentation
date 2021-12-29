@@ -48,6 +48,9 @@ import org.xwiki.scripting.documentation.ScriptBindingsFinder;
 @Singleton
 public class ScriptBindingsFinderInitializerListener implements EventListener
 {
+    /**
+     * The name of the listener.
+     */
     public static final String NAME = "ScriptBindingsFinderInitializerListener";
 
     private static final List<Event> EVENTS = Arrays.<Event>asList(new ApplicationReadyEvent());
@@ -80,24 +83,19 @@ public class ScriptBindingsFinderInitializerListener implements EventListener
     public void onEvent(Event event, Object source, Object data)
     {
         // Make bindings initialization asynchronous
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try {
-                    // Initialize a standard execution context
-                    executionContextManager.initialize(new ExecutionContext());
+        Thread thread = new Thread(() -> {
+            try {
+                // Initialize a standard execution context
+                executionContextManager.initialize(new ExecutionContext());
 
-                    // Fill the cache with all the bindings which can be found in the current context (main wiki before
-                    // any execution of template/page)
-                    defaultScriptBindingsFinder.find();
-                } catch (ExecutionContextException e) {
-                    logger.error("Failed to initialize ExecutionContext", e);
-                } finally {
-                    // Cleanup context
-                    execution.removeContext();
-                }
+                // Fill the cache with all the bindings which can be found in the current context (main wiki before
+                // any execution of template/page)
+                defaultScriptBindingsFinder.find();
+            } catch (ExecutionContextException e) {
+                logger.error("Failed to initialize ExecutionContext", e);
+            } finally {
+                // Cleanup context
+                execution.removeContext();
             }
         });
         thread.setDaemon(true);

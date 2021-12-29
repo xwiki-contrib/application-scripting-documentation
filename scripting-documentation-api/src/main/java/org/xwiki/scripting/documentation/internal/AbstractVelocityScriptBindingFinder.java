@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.xwiki.velocity.VelocityContextFactory;
@@ -58,23 +57,8 @@ public abstract class AbstractVelocityScriptBindingFinder extends AbstractScript
 
     protected void addAllBinding(VelocityContext vcontext, Map<String, Class<?>> bindings)
     {
-        // Not very nice but there is no much choice since the VelocityContext#getKeys() signature changed in Velocity
-        // 2.2
-        // TODO: get rid if this hack when upgrading to 12.0+
-        try {
-            Map<String, Object> internalContext = (Map) FieldUtils.readField(vcontext, "context", true);
-
-            for (Map.Entry<String, Object> entry : internalContext.entrySet()) {
-                if (entry.getValue() != null) {
-                    bindings.put(entry.getKey(), entry.getValue().getClass());
-                }
-            }
-        } catch (IllegalAccessException e) {
-            // Fallback on Velocity 1.7 API and hope for the best
-            for (Object key : vcontext.getKeys()) {
-                String name = key.toString();
-                bindings.put(name, vcontext.get(name).getClass());
-            }
+        for (String name : vcontext.getKeys()) {
+            bindings.put(name, vcontext.get(name).getClass());
         }
     }
 }

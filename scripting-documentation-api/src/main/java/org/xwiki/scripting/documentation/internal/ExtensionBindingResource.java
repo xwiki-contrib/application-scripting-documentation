@@ -25,24 +25,24 @@ import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.jar.JarFile;
 
 import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import org.reflections.vfs.Vfs;
+import org.reflections.vfs.Vfs.UrlType;
 import org.reflections.vfs.ZipDir;
 import org.xwiki.extension.ResolveException;
 import org.xwiki.extension.repository.ExtensionRepositoryManager;
 import org.xwiki.extension.repository.result.IterableResult;
 import org.xwiki.extension.version.Version;
 import org.xwiki.extension.version.internal.DefaultVersion;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.Lists;
 
 /**
  * XWiki Extensions binding resource.
@@ -81,11 +81,15 @@ public class ExtensionBindingResource extends AbstractBindingResource
      */
     private static final class JarUrlType implements Vfs.UrlType
     {
-        public boolean matches(URL url) {
+        @Override
+        public boolean matches(URL url)
+        {
             return "jar".equals(url.getProtocol());
         }
 
-        public Vfs.Dir createDir(URL url) throws Exception {
+        @Override
+        public Vfs.Dir createDir(URL url) throws Exception
+        {
             try {
                 URLConnection urlConnection = url.openConnection();
                 if (urlConnection instanceof JarURLConnection) {
@@ -179,7 +183,8 @@ public class ExtensionBindingResource extends AbstractBindingResource
     }
 
     @Override
-    public String getArchiveBrowserBaseURL() {
+    public String getArchiveBrowserBaseURL()
+    {
         return "http://nexus.xwiki.org/nexus/service/local/repositories/public/archive/";
     }
 
@@ -328,15 +333,15 @@ public class ExtensionBindingResource extends AbstractBindingResource
     private Set<String> getPomPropertyFiles()
     {
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-        configurationBuilder.setScanners(new ResourcesScanner());
-        configurationBuilder.setUrls(url);
-        configurationBuilder.filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix("META-INF.maven")));
+        configurationBuilder.setScanners(Scanners.Resources);
+        configurationBuilder.setUrls(this.url);
+        configurationBuilder.filterInputsBy(new FilterBuilder().includePackage("META-INF.maven"));
 
         // Backup the active url types handling
         List<Vfs.UrlType> urlTypes = Vfs.getDefaultUrlTypes();
 
         // Set default url types handling, patching the jar url type to prevent excessive closing of cached jar files
-        Vfs.setDefaultURLTypes(Lists.<Vfs.UrlType>newArrayList(Vfs.DefaultUrlTypes.values()));
+        Vfs.setDefaultURLTypes(new ArrayList<>(Arrays.<UrlType>asList(Vfs.DefaultUrlTypes.values())));
         Vfs.addDefaultURLTypes(JAR_URL_TYPE_FIXED);
 
         Reflections reflections = new Reflections(configurationBuilder);
@@ -344,7 +349,7 @@ public class ExtensionBindingResource extends AbstractBindingResource
         // Restore the previously active url type handling
         Vfs.setDefaultURLTypes(urlTypes);
 
-        return reflections.getResources(Predicates.equalTo("pom.properties"));
+        return reflections.getResources("pom.properties");
     }
 
     private static MavenCoord readPomPropertyFile(URL url)

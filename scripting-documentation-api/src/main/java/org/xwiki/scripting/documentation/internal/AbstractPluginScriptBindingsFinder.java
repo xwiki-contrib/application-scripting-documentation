@@ -48,18 +48,19 @@ public abstract class AbstractPluginScriptBindingsFinder extends AbstractScriptB
     @Inject
     private Logger logger;
 
-    protected abstract Class< ? > getPluginClass(XWikiPluginInterface plugin);
+    protected abstract Class<?> getPluginClass(XWikiPluginInterface plugin);
 
     /**
      * @return the map of classes bindings in all velocity contexts
      */
-    protected Map<String, Class< ? >> getBindings()
+    @Override
+    protected Map<String, Class<?>> getBindings()
     {
-        Map<String, Class< ? >> bindings = new HashMap<String, Class< ? >>();
+        Map<String, Class<?>> bindings = new HashMap<>();
         XWikiPluginManager pluginManager = contextProvider.get().getWiki().getPluginManager();
 
         for (String name : pluginManager.getPlugins()) {
-            Class< ? > plugin = getPluginClass(pluginManager.getPlugin(name));
+            Class<?> plugin = getPluginClass(pluginManager.getPlugin(name));
             if (plugin != null) {
                 bindings.put(name, plugin);
             } else {

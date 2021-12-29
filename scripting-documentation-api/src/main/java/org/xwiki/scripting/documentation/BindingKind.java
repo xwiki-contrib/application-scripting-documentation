@@ -58,7 +58,7 @@ public class BindingKind
     public static final BindingKind INTERNAL_PLUGIN = new BindingKind("internalplugin");
 
     /**
-     * Any java class (not necessarily bound anywhere)
+     * Any java class (not necessarily bound anywhere).
      */
     public static final BindingKind JAVA = new BindingKind("java");
 
@@ -68,7 +68,8 @@ public class BindingKind
      * Create a new binding kind.
      * @param type the unique identifier of this binding kind.
      */
-    public BindingKind(String type) {
+    public BindingKind(String type)
+    {
         this.type = type;
     }
 

@@ -36,7 +36,10 @@ public final class UrlChecker
 
     private static final String HEAD = "HEAD";
 
-    private UrlChecker() { }
+    private UrlChecker()
+    {
+        
+    }
 
     /**
      * Check an URL is valid and exists on the remote server before returning it.
@@ -44,7 +47,8 @@ public final class UrlChecker
      * @param urlString the url to check.
      * @return the url if the url is accessible.
      */
-    public static URL getURL(String urlString) {
+    public static URL getURL(String urlString)
+    {
         try {
             URL url = new URL(urlString);
 
@@ -69,7 +73,8 @@ public final class UrlChecker
      * @param urlString the URL to check.
      * @return the redirection destination if the url is accessible.
      */
-    public static URL getRedirectURL(String urlString) {
+    public static URL getRedirectURL(String urlString)
+    {
         try {
             URL url = new URL(urlString);
 

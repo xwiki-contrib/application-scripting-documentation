@@ -119,7 +119,8 @@ public abstract class AbstractTypeInformationFinder
         }
     }
 
-    protected boolean isInternal(Class< ? > klass) {
+    protected boolean isInternal(Class< ? > klass)
+    {
         return klass.getCanonicalName().contains(".internal.");
     }
 

@@ -47,19 +47,19 @@ public abstract class AbstractBindingResource implements BindingResource
         if (this == o) {
             return true;
         }
-        if (o == null || !(o instanceof AbstractBindingResource)) {
+        if (!(o instanceof AbstractBindingResource)) {
             return false;
         }
 
         return classLoader.equals(((AbstractBindingResource) o).classLoader)
-            && url.equals(((AbstractBindingResource) o).url);
+            && url.toString().equals(((AbstractBindingResource) o).url.toString());
     }
 
     @Override
     public int hashCode()
     {
         int result = classLoader.hashCode();
-        result = 31 * result + url.hashCode();
+        result = 31 * result + url.toString().hashCode();
         return result;
     }
 

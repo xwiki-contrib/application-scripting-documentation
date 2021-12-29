@@ -20,7 +20,8 @@
 
 package org.xwiki.scripting.documentation.script.internal;
 
-import javax.inject.Named;
+import java.lang.reflect.Type;
+
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
@@ -33,17 +34,16 @@ import org.xwiki.scripting.documentation.BindingKind;
  * @version $Id$
  */
 @Component
-@Named("org.xwiki.scripting.documentation.BindingKind")
 @Singleton
-public class BindingKindConverter extends AbstractConverter
+public class BindingKindConverter extends AbstractConverter<BindingKind>
 {
     @Override
-    @Deprecated
-    protected <T> T convertToType(Class<T> type, Object value)
+    protected BindingKind convertToType(Type targetType, Object value)
     {
         if (value != null) {
-            return type.cast(new BindingKind(value.toString()));
+            return new BindingKind(value.toString());
         }
+
         return null;
     }
 }

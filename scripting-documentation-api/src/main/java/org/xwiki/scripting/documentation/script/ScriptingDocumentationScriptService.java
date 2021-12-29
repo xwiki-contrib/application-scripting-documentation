@@ -87,7 +87,8 @@ public class ScriptingDocumentationScriptService implements ScriptService
     /**
      * @return the default bindings finder.
      */
-    public ScriptBindingsFinder getBindingsFinder() {
+    public ScriptBindingsFinder getBindingsFinder()
+    {
         return getBindingsFinder(null);
     }
 
@@ -125,7 +126,8 @@ public class ScriptingDocumentationScriptService implements ScriptService
      * @param name the fully qualified name of the desired class.
      * @return a binding providing information about the given class or null if not found.
      */
-    public Binding getTypeInformation(String name) {
+    public Binding getTypeInformation(String name)
+    {
         return typeInformationFinder.find(name);
     }
 }

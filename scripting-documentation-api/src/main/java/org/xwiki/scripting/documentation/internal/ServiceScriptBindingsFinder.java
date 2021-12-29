@@ -55,12 +55,13 @@ public class ServiceScriptBindingsFinder extends AbstractScriptBindingsFinder
     /**
      * @return the map of classes bindings in all velocity contexts
      */
-    protected Map<String, Class< ? >> getBindings()
+    @Override
+    protected Map<String, Class<?>> getBindings()
     {
-        Map<String, Class< ? >> bindings = new HashMap<String, Class<?>>();
+        Map<String, Class<?>> bindings = new HashMap<>();
 
-        for (ComponentDescriptor< ? > descriptor
-            : componentManager.get().getComponentDescriptorList((Type) ScriptService.class)) {
+        for (ComponentDescriptor<?> descriptor : componentManager.get()
+            .getComponentDescriptorList((Type) ScriptService.class)) {
             bindings.put(descriptor.getRoleHint(), descriptor.getImplementation());
         }
 

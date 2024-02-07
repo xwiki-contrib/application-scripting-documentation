@@ -348,18 +348,9 @@ $xwiki.jsx.use('ScriptingDocumentation.ScriptDocPanel', {'minify': false})
       <code>// Configure Angular JS to use CDN and fallback to webjars
 require.config({
     paths: {
-        'css': [
-            'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.5/css.min', // cdn
-            '$services.webjars.url('require-css/0.1.7/css')' // local fallback
-        ],
-        'angular': [
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min', // cdn
-            '$services.webjars.url('angular/1.3.8/js/angular.min')' // local fallback
-        ],
-        'angular-loading-bar': [
-            'https://cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.7.1/loading-bar.min', // cdn
-            '$services.webjars.url('angular-loading-bar/0.7.1/loading-bar.min')' // local fallback
-        ]
+        'css': '$services.webjars.url('require-css/0.1.7/css')',
+        'angular': '$services.webjars.url('angularjs/1.3.8/angular.min')',
+        'angular-loading-bar': '$services.webjars.url('angular-loading-bar/0.7.1/loading-bar.min')'
     },
     shim: {
         'angular' : {'exports' : 'angular'},
@@ -617,7 +608,7 @@ require(['jquery','angular','angular-loading-bar'],
     }
 
     function setNewLocation(url, hash) {
-      if (url != _location || hash != _hash) {
+      if (url != _location || hash != _hash) {
         if (url) {
           _base = url.substring(0, url.lastIndexOf('/'));
           _location = url;

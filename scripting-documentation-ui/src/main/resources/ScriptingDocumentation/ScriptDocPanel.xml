@@ -353,7 +353,7 @@ require.config({
         'angular-loading-bar': '$services.webjars.url('angular-loading-bar/0.7.1/loading-bar.min')'
     },
     shim: {
-        'angular' : {'exports' : 'angular'},
+        'angular' : {'exports' : 'angular', 'deps': ['jquery']},
         'angular-loading-bar' : {'deps' : ['angular', 'css!angular-loading-bar']}
     }
 });
@@ -546,7 +546,7 @@ require(['jquery','angular','angular-loading-bar'],
 
     var _location = null, _base = null, _hash = null, _params = null, _element = $('html'),
         absUrlRE = /^https?:\/\//i,
-        hostUrlRE = /^(https?:\/\/[^/]+)/i
+        hostUrlRE = /^(https?:\/\/[^/]+)/i,
         xwikiUrlRE = /^https?:\/\/[^/]*\.xwiki\.org/i,
         parentRE = /[\-\w]+\/\.\.\//,
         extensionUrlRE = /^https?:\/\/extensions\.xwiki\.org\/?\?id=([^:]+):([^:]+)(?::([^:]+))?:::.+\/apidocs(\/[^?]+)\?is-external=true$/,
@@ -588,15 +588,19 @@ require(['jquery','angular','angular-loading-bar'],
     }
 
     function buildJavadocURL(parsedUrl) {
-      return 'http://nexus.xwiki.org/nexus/service/local/repositories/public/archive/'
+      return 'https://nexus.xwiki.org/nexus/service/local/repositories/public/archive/'
         + parsedUrl.groupId.replace(/\./g,'/') + '/' + parsedUrl.artifactId + '/' + parsedUrl.version + '/'
         + parsedUrl.artifactId + '-' + parsedUrl.version + '-javadoc.jar/!'
         + parsedUrl.jdocPath;
     }
 
     function scrollToHash(hash) {
-      var anchor = (hash) ? $('*[name="' + hash + '"]')[0] : null,
-          target = (hash &amp;&amp; anchor) ? $(anchor).offset().top : _element.offset().top,
+      var anchor = hash ? document.getElementById(hash) || $('*[name="' + hash + '"]')[0]: null;
+      if (!anchor) {
+        return;
+      }
+
+      var target = (hash &amp;&amp; anchor) ? $(anchor).offset().top : _element.offset().top,
           distance = target - $(document).scrollTop(),
           speed = Math.sqrt(Math.abs(distance)) * 5;
 
@@ -623,14 +627,9 @@ require(['jquery','angular','angular-loading-bar'],
     }
 
     function updateBrowserLocation() {
-      if (_location) {
-        if (_hash) {
-          $location.search('url', _location + '#' + _hash);
-        } else {
-          $location.search('url', _location);
-        }
-      } else {
-        $location.search('url', null);
+      $location.search('url', _location || null);
+      if (_hash) {
+        $location.hash(_hash);
       }
     }
 
@@ -660,7 +659,9 @@ require(['jquery','angular','angular-loading-bar'],
           window.open(value);
         }
       } else if (_base) {
-        if (url.startsWith('/')) {
+        if (!url) {
+          url = _location;
+        } else if (url.startsWith('/')) {
           url = getHost(_base) + url;
         } else {
           url = reduceURL(_base + '/' + url);
@@ -732,7 +733,10 @@ require(['jquery','angular','angular-loading-bar'],
             }
           }
         }
-        scrollToHash(_hash);
+        var hash = location.hash.substring(1);
+        if (hash) {
+          scrollToHash(hash);
+        }
       },
 
       handleClick : function(event) {
